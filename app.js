@@ -21,7 +21,7 @@ var campgroundSchema = new mongoose.Schema({
 
  var Campground = mongoose.model("Campground", campgroundSchema);
  
-Campground.create(
+/* Campground.create(
      {
          name: "سارة خليل", 
          image: "رأس الجورة ",
@@ -35,7 +35,7 @@ Campground.create(
           console.log("NEWLY CREATED CAMPGROUND: ");
           console.log(campground);
       }
-    });
+    }); */
 
 app.get("/", function(req,res){
     Campground.find({}, function(err, allCampgrounds){
