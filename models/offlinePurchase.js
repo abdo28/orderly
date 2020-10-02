@@ -1,6 +1,6 @@
 var mongoose = require("mongoose");
 
-var offlinePurchesSchema = new mongoose.Schema({
+var offlinePurchaseSchema = new mongoose.Schema({
    number: Integer,
    wholesalePrice: Integer,
    retailPrice: Integer,
@@ -8,4 +8,4 @@ var offlinePurchesSchema = new mongoose.Schema({
    date: String
 });
 
-module.exports = mongoose.model("offlinePurches", offlinePurchesSchema);
+module.exports = mongoose.model("offlinePurchase", offlinePurchaseSchema);

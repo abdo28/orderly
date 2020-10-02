@@ -5,7 +5,7 @@ var offlineItemsSchema = new mongoose.Schema({
    onlinePurches:[
     {
        type: mongoose.Schema.Types.ObjectId,
-       ref: "onlinePurches"
+       ref: "onlinePurchase"
     }
  ]
 });

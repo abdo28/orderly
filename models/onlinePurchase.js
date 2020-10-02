@@ -1,6 +1,6 @@
 var mongoose = require("mongoose");
 
-var onlinePurchesSchema = new mongoose.Schema({
+var onlinePurchaseSchema = new mongoose.Schema({
    number: Integer,
    wholesalePriceUSD: Integer,
    wholesalePriceILS: Integer,
@@ -11,4 +11,4 @@ var onlinePurchesSchema = new mongoose.Schema({
    arrived:Boolean
 });
 
-module.exports = mongoose.model("onlinePurches", onlinePurchesSchema);
+module.exports = mongoose.model("onlinePurchase", onlinePurchaseSchema);
