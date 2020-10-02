@@ -4,10 +4,12 @@ var mongoose = require("mongoose");
 
 app = express();
 
+// local mongod
 mongoose.connect("mongodb://127.0.0.1:27017/orderly_v1" );
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useUnifiedTopology', true);
 app.set("view engine", "ejs");
+app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({extended: true}));
 
 
@@ -19,11 +21,11 @@ var campgroundSchema = new mongoose.Schema({
 
  var Campground = mongoose.model("Campground", campgroundSchema);
  
-/* Campground.create(
+Campground.create(
      {
-         name: "سارة الجعبري", 
-         image: "ما بعرف شو دخلكم",
-         description: "11122 شارع أحمد السعيدي"
+         name: "سارة خليل", 
+         image: "رأس الجورة ",
+         description: "5 أصفر 6 أحمر "
          
      },
      function(err, campground){
@@ -33,7 +35,7 @@ var campgroundSchema = new mongoose.Schema({
           console.log("NEWLY CREATED CAMPGROUND: ");
           console.log(campground);
       }
-}); 
+    });
 
 app.get("/", function(req,res){
     Campground.find({}, function(err, allCampgrounds){
@@ -43,11 +45,8 @@ app.get("/", function(req,res){
            res.render("index",{campgrounds:allCampgrounds});
         }
      });
-}); */
+}); 
 
-
-//mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
-//const http = require('http');
 
 
 

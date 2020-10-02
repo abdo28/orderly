@@ -1,0 +1,12 @@
+body{
+    font-family: 'flat-jooza';   
+}
+
+ul.nav a:hover { 
+    color: #fff;
+    background-color:#337ab7 ; 
+}
+
+.white {
+    color: #fff;
+}
