@@ -1,10 +1,10 @@
 var mongoose = require("mongoose");
 
 var onlinePurchaseSchema = new mongoose.Schema({
-   number: Integer,
-   wholesalePriceUSD: Integer,
-   wholesalePriceILS: Integer,
-   retailPrice: Integer,
+   number: Number,
+   wholesalePriceUSD: Number,
+   wholesalePriceILS: Number,
+   retailPrice: Number,
    sourceURL: String, 
    dateOrdered: String, 
    dateArrived:String,

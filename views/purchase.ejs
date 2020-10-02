@@ -1,0 +1,80 @@
+<%- include("./partials/header")%>
+
+<div class="container">
+    <h2>المشتريات</h2>
+    <br>
+
+    <a href="/" class="btn btn-primary">إضافة  مشتريات أونلاين</a>
+    <a href="/" class="btn btn-primary">إضافة مشتريات محلية</a>
+    <a href="/" class="btn btn-primary">إضافة نوع منتج </a>
+    <br>
+    <hr>
+    
+    <h3>مشتريات أونلاين </h3>
+    <thead>
+      <tr>
+        <th scope="col">النوع </th>
+        <th scope="col">رابط المصدر</th>
+        <th scope="col">السعر الكلي دولار</th>
+        <th scope="col">السعر الكلي شيكل</th>
+        <th scope="col">سعر البيع شيكل</th>
+        <th scope="col"> عدد القطع للبيع</th>
+        <th scope="col">تاريخ الطلب</th>
+        <th scope="col">تاريخ الوصول </th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <% for( var i =0; i<online.length ; i++){ %>
+        <% for(var j=0; j<online[i].onlinePurchase.length; j ++) {%>
+        <tr>
+            <th scope="row"><%= online[i].type %></th>
+            <td><%= online[i].onlinePurchase[j].sourceURL %> </td>
+            <td> <%= online[i].onlinePurchase[j].wholesalePriceUSD %></td>
+            <td> <%= online[i].onlinePurchase[j].wholesalePriceILS %></td>
+            <td> <%= online[i].onlinePurchase[j].retailPrice %></td>
+            <td> <%= online[i].onlinePurchase[j].number %></td>
+            <td> <%= online[i].onlinePurchase[j].dateOrdered %></td>
+            <td> <%= online[i].onlinePurchase[j].dateArrived %></td>
+          </tr>
+        <% } %>
+      <% } %>
+     
+    </tbody>
+  </table> 
+
+  <br>
+  <hr>
+
+  <h3> مشتريات محلية</h3> 
+  <thead>
+    <tr>
+      <th scope="col">النوع </th>
+      <th scope="col"> المصدر</th>
+      <th scope="col">سعر الجملة للقطعة </th>
+      <th scope="col">سعر القطعة للبيع </th>
+      <th scope="col">عدد القطع</th>
+      <th scope="col">تاريخ الوصول</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    
+    <% for( var i =0; i<offline.length ; i++){ %>
+      <% for(var j=0; j<offline[i].offlinePurchase.length; j ++) {%>
+      <tr>
+          <th scope="row"><%= offline[i].type %></th>
+          <td><%= offline[i].offlinePurchase[j].source %> </td>
+          <td> <%= offline[i].offlinePurchase[j].wholesalePrice %></td>
+          <td> <%= offline[i].offlinePurchase[j].retailPrice %></td>
+          <td> <%= offline[i].offlinePurchase[j].number %></td>
+          <td> <%= offline[i].offlinePurchase[j].date %></td>
+        </tr>
+      <% } %>
+    <% } %>
+   
+  </tbody>
+</table> 
+
+  </div>
+  <%- include("./partials/footer")%>

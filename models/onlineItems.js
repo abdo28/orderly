@@ -1,8 +1,8 @@
 var mongoose = require("mongoose");
 
-var offlineItemsSchema = new mongoose.Schema({
+var onlineItemsSchema = new mongoose.Schema({
    type: String, 
-   onlinePurches:[
+   onlinePurchase:[
     {
        type: mongoose.Schema.Types.ObjectId,
        ref: "onlinePurchase"

@@ -1,9 +1,9 @@
 var mongoose = require("mongoose");
 
 var offlinePurchaseSchema = new mongoose.Schema({
-   number: Integer,
-   wholesalePrice: Integer,
-   retailPrice: Integer,
+   number: Number,
+   wholesalePrice: Number,
+   retailPrice: Number,
    source: String,
    date: String
 });

@@ -2,14 +2,14 @@ var mongoose = require("mongoose");
 
 var deliveryOrdersSchema = new mongoose.Schema({
    personName: String, 
-   discount:Integer,
+   discount:Number,
    items:[
        { 
            type: mongoose.Schema.Types.ObjectId,
            ref: "item" 
         }
    ],
-   extraForDelivery:Integer,
+   extraForDelivery:Number,
    dateToCompany:String,
    dateToCustomer:String,
    recivedByCustomer:Boolean,

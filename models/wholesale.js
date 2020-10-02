@@ -2,7 +2,7 @@ var mongoose = require("mongoose");
 
 var wholesaleSchema = new mongoose.Schema({
    companyName: String, 
-   discount:Integer,
+   discount: Number,
    wholesaleItems:[
        { 
            type: mongoose.Schema.Types.ObjectId,
@@ -10,7 +10,7 @@ var wholesaleSchema = new mongoose.Schema({
         }
    ],
    dateOfSelling:String,
-   amountPaied:Integer, 
+   amountPaied: Number, 
    isAllPaied:Boolean,
    note:String,
 });

@@ -2,7 +2,7 @@ var mongoose = require("mongoose");
 
 var inPersonOrdersSchema = new mongoose.Schema({
    personName: String, 
-   discount:Integer,
+   discount: Number,
    items:[
        { 
            type: mongoose.Schema.Types.ObjectId,

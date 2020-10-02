@@ -1,5 +1,10 @@
 var express = require("express");
 var bodyParser  = require("body-parser");
+var onlineItems = require("./models/onlineItems");
+var offlineItems  = require("./models/offlineItems");
+var inPersonOrders = require("./models/inPersonOrders");
+var deliveryOrders = require("./models/deliveryOrders");
+var wholesale = require("./models/wholesale");
 var mongoose = require("mongoose");
 
 app = express();
@@ -12,50 +17,35 @@ app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({extended: true}));
 
-
-var campgroundSchema = new mongoose.Schema({
-    name: String,
-    image: String,
-    description: String
- });
-
- var Campground = mongoose.model("Campground", campgroundSchema);
  
-/* Campground.create(
-     {
-         name: "سارة خليل", 
-         image: "رأس الجورة ",
-         description: "5 أصفر 6 أحمر "
-         
-     },
-     function(err, campground){
-      if(err){
-          console.log(err);
-      } else {
-          console.log("NEWLY CREATED CAMPGROUND: ");
-          console.log(campground);
-      }
-    }); */
 
 app.get("/", function(req,res){
-    Campground.find({}, function(err, allCampgrounds){
-        if(err){
-            console.log(err);
-        } else {
-           res.render("index",{campgrounds:allCampgrounds});
-        }
-     });
+    res.render("index");
+    // Campground.find({}, function(err, allCampgrounds){
+    //     if(err){
+    //         console.log(err);
+    //     } else {
+    //        res.render("index",{campgrounds:allCampgrounds});
+    //     }
+    //  });
 }); 
 
-
-
-
-/*const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello World');
+app.get("/purchase", function(req, res){
+  onlineItems.find({}, function(err, onItems){
+    if(err){
+      console.log(err);
+    } else {
+      offlineItems.find({}, function(err, offItems){
+        if(err){
+          console.log(err);
+        } else {
+          res.render("purchase", {online:onItems, offline:offItems});
+        }
+      }) 
+    }
+  });
 });
-*/
+
 app.listen(3000, '127.0.0.1', () => {
   console.log(`Server running at http://${'127.0.0.1'}:${3000}/`);
 });
