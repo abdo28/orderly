@@ -5,28 +5,7 @@
     <br>
     <br>
     <h3>تصميم سلس لإدارة أفضل </h3>
-<table class="table">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">إسم</th>
-        <th scope="col">الصورة</th>
-        <th scope="col">الوصف</th>
-      </tr>
-    </thead>
-    <tbody>
-      
-      <% for( var i =0; i<campgrounds.length ; i++){ %>
-        <tr>
-            <th scope="row">1</th>
-            <td><%= campgrounds[i].name%> </td>
-            <td> <%= campgrounds[i].image%></td>
-            <td><%= campgrounds[i].description%></td>
-          </tr>
-      <% } %>
-     
-    </tbody>
-  </table> 
+
   </div>
 
 <%- include("./partials/footer")%>

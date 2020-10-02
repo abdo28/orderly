@@ -4,9 +4,19 @@
     <h2>المشتريات</h2>
     <br>
 
-    <a href="/" class="btn btn-primary">إضافة  مشتريات أونلاين</a>
-    <a href="/" class="btn btn-primary">إضافة مشتريات محلية</a>
-    <a href="/" class="btn btn-primary">إضافة نوع منتج </a>
+    <a href="/purchase/newOnline" class="btn btn-primary">إضافة  مشتريات أونلاين</a>
+    <a href="/purchase/newOffline" class="btn btn-primary">إضافة مشتريات محلية</a>
+    <div style="width:33%">
+      <h4>إضافة نوع منتج جديد</h4>
+      <form action="/purchase/newitem" method="POST">
+        <div class="form-group">
+            <input class="form-control" type="text" name="newItem" placeholder="النوع الجديد">
+        </div>
+        <div class="form-group">
+            <button class="btn btn-lg btn-primary btn-block">إضافة  </button>
+        </div>
+    </form>
+    </div>
     <br>
     <hr>
     
