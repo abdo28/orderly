@@ -4,6 +4,7 @@ var onlineItems = require("./models/onlineItems");
 var offlineItems  = require("./models/offlineItems");
 var inPersonOrders = require("./models/inPersonOrders");
 var deliveryOrders = require("./models/deliveryOrders");
+var onlinePurchase = require("./models/onlinePurchase");
 var wholesale = require("./models/wholesale");
 var purchaseItem = require("./models/purchaseItems");
 var mongoose = require("mongoose");
@@ -32,7 +33,7 @@ app.get("/", function(req,res){
 }); 
 
 app.get("/purchase", function(req, res){
-  onlineItems.find({}, function(err, onItems){
+  onlinePurchase.find({}, function(err, onItems){
     if(err){
       console.log(err);
     } else {
@@ -40,7 +41,7 @@ app.get("/purchase", function(req, res){
         if(err){
           console.log(err);
         } else {
-          res.render("purchase", {online:onItems, offline:offItems});
+          res.render("purchase", {onlinePurchases:onItems, offline:offItems});
         }
       }) 
     }
@@ -59,21 +60,26 @@ app.get("/purchase/newOnline", function(req, res){
 
 app.post("/onlinePurch", function(req, res){
   // get data from form and add to campgrounds array
-  var type = req.body.type;
-  purchaseItem.find({})
-  var image = req.body.image;
-  var desc = req.body.description;
-  var newCampground = {name: name, image: image, description: desc}
-  // Create a new campground and save to DB
-  Campground.create(newCampground, function(err, newlyCreated){
-      if(err){
-          console.log(err);
-      } else {
-          //redirect back to campgrounds page
-          res.redirect("/campgrounds");
-      }
+  
+  var purchase = {
+    sourceURL: req.body.sourceURL, 
+    wholesalePriceUSD: req.body.wholesalePriceUSD,
+    wholesalePriceILS: req.body.wholesalePriceILS,
+    retailPrice: req.body.retailPrice,
+    number:req.body.number,
+    dateOrdered:req.body.dateOrdered,
+    dateArrived:req.body.dateArrived
+  };
+
+  onlinePurchase.create(purchase, function(err, newpur){
+    if(err){
+      console.log(err);
+    } else {
+      res.redirect('/purchase');
+    }
+    });
   });
-});
+
 
 
 

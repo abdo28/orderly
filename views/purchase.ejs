@@ -21,6 +21,8 @@
     <hr>
     
     <h3>مشتريات أونلاين </h3>
+    <table class="table">
+
     <thead>
       <tr>
         <th scope="col">النوع </th>
@@ -35,20 +37,18 @@
     </thead>
     <tbody>
       
-      <% for( var i =0; i<online.length ; i++){ %>
-        <% for(var j=0; j<online[i].onlinePurchase.length; j ++) {%>
+        <% for(var j=0; j<onlinePurchases.length; j ++) {%>
         <tr>
-            <th scope="row"><%= online[i].type %></th>
-            <td><%= online[i].onlinePurchase[j].sourceURL %> </td>
-            <td> <%= online[i].onlinePurchase[j].wholesalePriceUSD %></td>
-            <td> <%= online[i].onlinePurchase[j].wholesalePriceILS %></td>
-            <td> <%= online[i].onlinePurchase[j].retailPrice %></td>
-            <td> <%= online[i].onlinePurchase[j].number %></td>
-            <td> <%= online[i].onlinePurchase[j].dateOrdered %></td>
-            <td> <%= online[i].onlinePurchase[j].dateArrived %></td>
+            <td>#</td>
+            <td><%= onlinePurchases[j].sourceURL %> </td>
+            <td> <%= onlinePurchases[j].wholesalePriceUSD %></td>
+            <td> <%= onlinePurchases[j].wholesalePriceILS %></td>
+            <td> <%= onlinePurchases[j].retailPrice %></td>
+            <td> <%= onlinePurchases[j].number %></td>
+            <td> <%= onlinePurchases[j].dateOrdered %></td>
+            <td> <%= onlinePurchases[j].dateArrived %></td>
           </tr>
         <% } %>
-      <% } %>
      
     </tbody>
   </table> 
