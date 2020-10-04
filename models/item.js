@@ -5,4 +5,4 @@ var itemSchema = new mongoose.Schema({
    amount:Number
 });
 
-module.exports = mongoose.model("item", itemSchema);
+module.exports = mongoose.model("Item", itemSchema);

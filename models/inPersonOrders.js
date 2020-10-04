@@ -4,11 +4,12 @@ var inPersonOrdersSchema = new mongoose.Schema({
    personName: String, 
    discount: Number,
    items:[
-       { 
+     { 
            type: mongoose.Schema.Types.ObjectId,
-           ref: "item" 
+           ref: 'Item' 
         }
-   ],
+      ]
+   ,
    dateToPlace:String,
    dateToCustomer:String,
    recivedByCustomer:Boolean,

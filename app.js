@@ -1,5 +1,6 @@
 var express = require("express");
 var bodyParser  = require("body-parser");
+var Item = require("./models/Item");
 var onlineItems = require("./models/onlineItems");
 var offlineItems  = require("./models/offlineItems");
 var inPersonOrders = require("./models/inPersonOrders");
