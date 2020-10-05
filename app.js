@@ -1,102 +1,133 @@
 var express = require("express");
 var bodyParser  = require("body-parser");
-var Item = require("./models/Item");
-var onlineItems = require("./models/onlineItems");
-var offlineItems  = require("./models/offlineItems");
-var inPersonOrders = require("./models/inPersonOrders");
-var deliveryOrders = require("./models/deliveryOrders");
-var onlinePurchase = require("./models/onlinePurchase");
-var wholesale = require("./models/wholesale");
-var purchaseItem = require("./models/purchaseItems");
+//var methodOverride = require("method-override");
 var mongoose = require("mongoose");
 
+
+var warehouse = require("./models/warehouse");
+var purchaseArchive = require("./models/purchaseArchive");
 app = express();
 
 // local mongod
-mongoose.connect("mongodb://127.0.0.1:27017/orderly_v1" );
+
+mongoose.connect("mongodb://127.0.0.1:27017/orderly_v2", {useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
+  if (err)
+     console.error(err);
+  else
+     console.log("Connected to the mongodb"); 
+});
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useUnifiedTopology', true);
+mongoose.set('useFindAndModify', false);
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({extended: true}));
+//app.use(methodOverride("_method"));
 
 
 
 app.get("/", function(req,res){
     res.render("index");
-    // Campground.find({}, function(err, allCampgrounds){
-    //     if(err){
-    //         console.log(err);
-    //     } else {
-    //        res.render("index",{campgrounds:allCampgrounds});
-    //     }
-    //  });
 }); 
 
 app.get("/purchase", function(req, res){
-  onlinePurchase.find({}, function(err, onItems){
+  warehouse.find({}, function(err, warehouseItems){
     if(err){
       console.log(err);
     } else {
-      offlineItems.find({}, function(err, offItems){
+      purchaseArchive.find({}, function(err, Archive){
         if(err){
           console.log(err);
         } else {
-          res.render("purchase", {onlinePurchases:onItems, offline:offItems});
+          res.render("purchase", {warehouseIte:warehouseItems, ArchiveItems:Archive});
         }
       }) 
     }
   });
 });
 
-app.get("/purchase/newOnline", function(req, res){
-  purchaseItem.find({}, function(err, allitems){
+app.post("/purchase/newWarehouse", function(req, res){
+  var ware= {type:req.body.type, number:0, retailPrice:req.body.retailPrice };
+  warehouse.create(ware, function(err, newly){
+    if(err){
+      console.log(err);
+    } else {
+      console.log(newly);
+      res.redirect("/purchase");
+    }
+  });
+});
+
+app.get("/purchase/newArchive", function(req, res){
+  warehouse.find({}, function(err, allWarehouseItems){
         if(err){
             console.log(err);
         } else {
-           res.render("onlinePurchaseNew",{items:allitems});
+           res.render("purchasArhiveNew",{items:allWarehouseItems});
         }
      });
 });
 
-app.post("/onlinePurch", function(req, res){
+app.post("/Archive", function(req, res){
   // get data from form and add to campgrounds array
   
-  var purchase = {
-    sourceURL: req.body.sourceURL, 
-    wholesalePriceUSD: req.body.wholesalePriceUSD,
-    wholesalePriceILS: req.body.wholesalePriceILS,
-    retailPrice: req.body.retailPrice,
-    number:req.body.number,
-    dateOrdered:req.body.dateOrdered,
-    dateArrived:req.body.dateArrived
+  var purchaseArc = {
+    type: req.body.type, 
+    amount:req.body.amount, 
+    wholesalePrice:req.body.wholesalePrice, 
+    source:req.body.source, 
+    dateDelivered:req.body.dateDelivered,
+    notes:req.body.notes
   };
 
-  onlinePurchase.create(purchase, function(err, newpur){
+  purchaseArchive.create(purchaseArc, function(err, foundpur){
     if(err){
       console.log(err);
     } else {
-      res.redirect('/purchase');
+      console.log(foundpur);
+
+      warehouse.findOne({ type:foundpur.type }, function(err, ware){
+          if(err){
+            console.log(err);
+          }else {
+            warehouse.findOneAndUpdate({ type:foundpur.type }, { type:foundpur.type, number:(ware.number+foundpur.amount), retailPrice:ware.retailPrice }, function(err, result){
+              console.log(ware);
+              res.redirect('/purchase');
+            });
+          }
+        }); 
     }
     });
   });
 
+/*   app.put("purchase/:id", function(req, res){
+    purchaseArchive.findById(req.params.id, function(err, foundpur){
+      if(err){
+        console.log(err);
+      } else {
+        console.log(newpur);
+        
+        
+        
+      }
+      });
+    // find and update the correct campground
+    Campground.findByIdAndUpdate(req.params.id, req.body.campground, function(err, updatedCampground){
+       if(err){
+           res.redirect("/campgrounds");
+       } else {
+           //redirect somewhere(show page)
+           res.redirect("/campgrounds/" + req.params.id);
+       }
+    }); 
+}); */
 
 
 
-app.get("/purchase/newOffline");
 
 
-app.post("/purchase/newitem", function(req, res){
 
-  purchaseItem.create({type: req.body.newItem}, function(err, newly){
-    if(err){
-      console.log(err);
-    } else {
-      res.redirect("/purchase");
-    }
-  })
-});
+
 
 
 app.listen(3000, '127.0.0.1', () => {

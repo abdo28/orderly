@@ -6,7 +6,7 @@ var inPersonOrdersSchema = new mongoose.Schema({
    items:[
      { 
            type: mongoose.Schema.Types.ObjectId,
-           ref: 'Item' 
+           
         }
       ]
    ,

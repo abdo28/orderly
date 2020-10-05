@@ -1,90 +1,86 @@
 <%- include("./partials/header")%>
-
 <div class="container">
-    <h2>المشتريات</h2>
+    <h2>المشتريات / المستودع </h2>
     <br>
 
-    <a href="/purchase/newOnline" class="btn btn-primary">إضافة  مشتريات أونلاين</a>
-    <a href="/purchase/newOffline" class="btn btn-primary">إضافة مشتريات محلية</a>
-    <div style="width:33%">
+    <a href="/purchase/newArchive" class="btn btn-primary btn-default" style="width:30%">إضافة مشتريات</a>
+    <!-- <a href="/purchase/newOffline" class="btn btn-primary">إضافة مشتريات محلية</a> -->
+    <br>
+    <br>
+    <div style="width:30%">
       <h4>إضافة نوع منتج جديد</h4>
-      <form action="/purchase/newitem" method="POST">
+      <form action="/purchase/newWarehouse" method="POST">
         <div class="form-group">
-            <input class="form-control" type="text" name="newItem" placeholder="النوع الجديد">
+            <input class="form-control" type="text" name="type" placeholder="النوع الجديد" required>
         </div>
         <div class="form-group">
-            <button class="btn btn-lg btn-primary btn-block">إضافة  </button>
+          <input class="form-control" type="number" name="retailPrice" placeholder="سعر المفرق" required>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-lg btn-primary btn-block btn-sm">إضافة  </button>
         </div>
     </form>
     </div>
     <br>
     <hr>
     
-    <h3>مشتريات أونلاين </h3>
-    <table class="table">
+    <h3>المستودع </h3>
+  <table class="table" style="width: 40%">
 
-    <thead>
-      <tr>
-        <th scope="col">النوع </th>
-        <th scope="col">رابط المصدر</th>
-        <th scope="col">السعر الكلي دولار</th>
-        <th scope="col">السعر الكلي شيكل</th>
-        <th scope="col">سعر البيع شيكل</th>
-        <th scope="col"> عدد القطع للبيع</th>
-        <th scope="col">تاريخ الطلب</th>
-        <th scope="col">تاريخ الوصول </th>
-      </tr>
-    </thead>
-    <tbody>
-      
-        <% for(var j=0; j<onlinePurchases.length; j ++) {%>
-        <tr>
-            <td>#</td>
-            <td><%= onlinePurchases[j].sourceURL %> </td>
-            <td> <%= onlinePurchases[j].wholesalePriceUSD %></td>
-            <td> <%= onlinePurchases[j].wholesalePriceILS %></td>
-            <td> <%= onlinePurchases[j].retailPrice %></td>
-            <td> <%= onlinePurchases[j].number %></td>
-            <td> <%= onlinePurchases[j].dateOrdered %></td>
-            <td> <%= onlinePurchases[j].dateArrived %></td>
-          </tr>
-        <% } %>
-     
-    </tbody>
-  </table> 
-
-  <br>
-  <hr>
-
-  <h3> مشتريات محلية</h3> 
   <thead>
     <tr>
       <th scope="col">النوع </th>
-      <th scope="col"> المصدر</th>
-      <th scope="col">سعر الجملة للقطعة </th>
-      <th scope="col">سعر القطعة للبيع </th>
-      <th scope="col">عدد القطع</th>
-      <th scope="col">تاريخ الوصول</th>
-
+      <th scope="col"> الكمية الكلية</th>
+      <th scope="col">سعر المفرق </th>
+    
     </tr>
   </thead>
   <tbody>
     
-    <% for( var i =0; i<offline.length ; i++){ %>
-      <% for(var j=0; j<offline[i].offlinePurchase.length; j ++) {%>
+      <% for(var j=0; j<warehouseIte.length; j ++) {%>
       <tr>
-          <th scope="row"><%= offline[i].type %></th>
-          <td><%= offline[i].offlinePurchase[j].source %> </td>
-          <td> <%= offline[i].offlinePurchase[j].wholesalePrice %></td>
-          <td> <%= offline[i].offlinePurchase[j].retailPrice %></td>
-          <td> <%= offline[i].offlinePurchase[j].number %></td>
-          <td> <%= offline[i].offlinePurchase[j].date %></td>
+          <td><strong><%= warehouseIte[j].type %></strong> </td>
+          <td> <%= warehouseIte[j].number %></td>
+          <td> <%= warehouseIte[j].retailPrice %> شيكل</td>
+         
         </tr>
       <% } %>
-    <% } %>
    
   </tbody>
 </table> 
+    
+   
+  <br>
+  <hr>
+  <h3>أرشيف المشتريات </h3>
+  <table class="table">
 
+  <thead>
+    <tr>
+      <th scope="col">النوع </th>
+      <th scope="col">المصدر </th>
+      <th scope="col">الكمية</th>
+      <th scope="col">سعر الجملة</th>
+      <th scope="col">تاريخ الوصول</th>
+      <th scope="col">ملاحظات أخرى</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+      <% for(var j=0; j<ArchiveItems.length; j ++) {%>
+      <tr>
+          
+          <td><strong><%= ArchiveItems[j].type %></strong> </td>
+          <td> <%= ArchiveItems[j].source %></td>
+          <td> <%= ArchiveItems[j].amount %></td>
+          <td> <%= ArchiveItems[j].wholesalePrice %></td>
+          <td> <%= ArchiveItems[j].dateDelivered.getDate() %>-<%= ArchiveItems[j].dateDelivered.getMonth() %>-<%= ArchiveItems[j].dateDelivered.getFullYear() %></td>
+          <td> <%= ArchiveItems[j].notes %></td>
+                            
+        </tr>
+      <% } %>
+   
+  </tbody>
+</table> 
   </div>
   <%- include("./partials/footer")%>
