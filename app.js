@@ -48,14 +48,26 @@ app.get("/purchase", function(req, res){
 
 app.post("/purchase/newWarehouse", function(req, res){
   var ware= {type:req.body.type, number:0, retailPrice:req.body.retailPrice };
-  warehouse.create(ware, function(err, newly){
+  warehouse.find({type:ware.type}, function(err, ret){
     if(err){
       console.log(err);
     } else {
-      console.log(newly);
-      res.redirect("/purchase");
+      if(ret.length){
+        //'النوع الذي تحاول إضافته موجود مسبقا'
+        res.redirect("/purchase");
+      } else {
+        warehouse.create(ware, function(err, newly){
+          if(err){
+            console.log(err);
+          } else {
+            console.log(newly);
+            res.redirect("/purchase");
+          }
+        });
+      }
     }
   });
+    
 });
 
 app.get("/purchase/newArchive", function(req, res){
@@ -111,15 +123,7 @@ app.post("/Archive", function(req, res){
         
       }
       });
-    // find and update the correct campground
-    Campground.findByIdAndUpdate(req.params.id, req.body.campground, function(err, updatedCampground){
-       if(err){
-           res.redirect("/campgrounds");
-       } else {
-           //redirect somewhere(show page)
-           res.redirect("/campgrounds/" + req.params.id);
-       }
-    }); 
+   
 }); */
 
 
