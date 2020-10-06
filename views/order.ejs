@@ -1,0 +1,42 @@
+<%- include("./partials/header")%>
+<div class="container">
+    <h2>الطلبيات</h2>
+    <br>
+
+    <a href="/order/new" class="btn btn-primary btn-default" style="width:30%">إضافة طلبية</a>
+    <br>
+    <br>
+    <hr>
+    <h3> طلبيات التسليم</h3>
+  <table class="table">
+
+  <thead>
+    <tr>
+      <th scope="col">النوع </th>
+      <th scope="col">المصدر </th>
+      <th scope="col">الكمية</th>
+      <th scope="col">السعر</th>
+      <th scope="col">تاريخ الوصول</th>
+      <th scope="col">ملاحظات أخرى</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+      <% for(var j=0; j<ArchiveItems.length; j ++) {%>
+      <tr>
+          
+          <td><strong><%= ArchiveItems[j].type %></strong> </td>
+          <td> <%= ArchiveItems[j].source %></td>
+          <td> <%= ArchiveItems[j].amount %></td>
+          <td> <%= ArchiveItems[j].wholesalePrice %></td>
+          <td> <%= ArchiveItems[j].dateDelivered.getDate() %>-<%= ArchiveItems[j].dateDelivered.getMonth() %>-<%= ArchiveItems[j].dateDelivered.getFullYear() %></td>
+          <td> <%= ArchiveItems[j].notes %></td>
+                            
+        </tr>
+      <% } %>
+   
+  </tbody>
+</table> 
+
+</div>
+<%- include("./partials/footer")%>

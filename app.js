@@ -6,6 +6,8 @@ var mongoose = require("mongoose");
 
 var warehouse = require("./models/warehouse");
 var purchaseArchive = require("./models/purchaseArchive");
+var item = require("./models/item");
+var order = require("./models/order");
 app = express();
 
 // local mongod
@@ -24,12 +26,39 @@ app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({extended: true}));
 //app.use(methodOverride("_method"));
 
-
-
+// Landing
 app.get("/", function(req,res){
     res.render("index");
 }); 
 
+
+//orders routs
+app.get("/order", function(req, res){
+  order.find({recivedByCustomer:false}, function(err, foundOrders){
+    if(err){
+      console.log(err);
+    } else {
+      order.find({recivedByCustomer:false,  extraForDelivery:0}, function(err, foundTasleem){
+        if(err){
+          console.log(err);
+        } else {
+          res.render("order", {orders:foundOrders, tasleem:foundTasleem});
+        }
+      });
+    }
+  });
+});
+
+
+
+
+
+
+
+
+
+
+// purchases routes
 app.get("/purchase", function(req, res){
   warehouse.find({}, function(err, warehouseItems){
     if(err){
@@ -111,25 +140,6 @@ app.post("/Archive", function(req, res){
     }
     });
   });
-
-/*   app.put("purchase/:id", function(req, res){
-    purchaseArchive.findById(req.params.id, function(err, foundpur){
-      if(err){
-        console.log(err);
-      } else {
-        console.log(newpur);
-        
-        
-        
-      }
-      });
-   
-}); */
-
-
-
-
-
 
 
 
