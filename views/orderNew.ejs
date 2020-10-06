@@ -1,6 +1,82 @@
 <%- include("./partials/header")%>
 <div class="container">
- 
+
+    <div class="row">
+        <h1 style="text-align: center"></h1>
+        <div style="width: 30%; margin: 25px auto;">
+            <form action="/order/newOrder" method="POST">
+
+                <div class="form-group">
+                    <input class="form-control" type="text" name="personName" placeholder="إسم الزبون" required>
+                </div>
+                <h6>تاريخ  التسليم </h6>
+                <div class="form-group">
+                    <input class="form-control" type="date"  name="dateToCompany"  required>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="number" step="any" name="discount" placeholder="الخصم ان وجد" >
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" name="notes" placeholder="ملاحظات" >
+                </div>
+                <br>
+                <h4>في حال كان الطلب توصيل أضف المعلومات التالية</h4>
+                <div class="form-group">
+                    <input class="form-control" type="text"  name="personLocation" placeholder="مكان التوصيل">
+                </div>
+                <div class="form-group">
+                    <select class="form-control" name="extraForDelivery" >
+                        <option value="heb">مدينة الخليل</option>
+                        <option value="wes">الضفة الغربية</option>
+                        <option value="jer">القدس</option>
+                        <option value="isr">الداخل</option>
+                    </select>
+                </div>
+                <br>
+                <h4>الطلبية </h4>
+                <label>عدد العناصر</label>
+                <%var count=0%>                
+
+                <input type="number" name="numberToCount" id="numberToCount">
+                <p  class="btn btn-xs btn-success"onclick="myFunction()" type="submit" id="button1">تأكيد</p>
+                <div id="itemsTobe">
+
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-lg btn-primary btn-block">إدخال </button>
+                </div>
+            </form>
+            <a href="/order">رجوع للصفحة السابقة </a>
+        </div>
+    </div>
 
 </div>
+<script>
+    function htmlDecode(input){
+        var e = document.createElement('div');
+        e.innerHTML = input;
+        return e.childNodes.length ===0 ?"": e.childNodes[0].nodeValue;
+    }
+    var items = JSON.parse(htmlDecode("<%= JSON.stringify(items) %>"));
+    function myFunction(){
+        let numberToCount = document.getElementById("numberToCount");
+        count=numberToCount.value;
+        let inner="";
+        console.log("yes");
+        for(var k=0; k<count; k++){
+            console.log("yes");
+            inner+='<div class="form-group"><select class="form-control" name="orderItem'+k+'[type]" >';
+                for(var i=0; i<items.length; i++){ 
+                            inner+='<option value="'+items[i].type+'">'+items[i].type+'</option>';
+                }
+                   inner+='</select></div><div class="form-group"><input class="form-control" type="number"  name="orderItem'+k+'[amount]" placeholder="الكمية"></div>';
+             } 
+
+            document.getElementById("itemsTobe").innerHTML= inner;
+            console.log("yes");
+    }
+</script>
+
+
+
 <%- include("./partials/footer")%>

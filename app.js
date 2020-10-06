@@ -34,7 +34,7 @@ app.get("/", function(req,res){
 
 //orders routs
 app.get("/order", function(req, res){
-  order.find({recivedByCustomer:false}, function(err, foundOrders){
+  order.find({recivedByCustomer:false, extraForDelivery:!0}, function(err, foundOrders){
     if(err){
       console.log(err);
     } else {
@@ -42,11 +42,25 @@ app.get("/order", function(req, res){
         if(err){
           console.log(err);
         } else {
-          res.render("order", {orders:foundOrders, tasleem:foundTasleem});
+          res.render("order", {tawseel:foundOrders, tasleem:foundTasleem});
         }
       });
     }
   });
+});
+
+app.get("/order/new", function(req, res){
+  warehouse.find({}, function(err, allWarehouseItems){
+    if(err){
+        console.log(err);
+    } else {
+       res.render("orderNew",{items:allWarehouseItems});
+    }
+ });
+});
+
+app.post("/order/newOrder", function(req, res){
+  res.send(req.body);
 });
 
 

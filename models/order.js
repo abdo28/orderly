@@ -12,6 +12,7 @@ var orderSchema = new mongoose.Schema({
     extraForDelivery:Number,
     dateToCompany:Date,
     dateToCustomer:Date,
+    finalCost:Number,
     discount:Number,
     recivedByCustomer:Boolean,
     notes:String

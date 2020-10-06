@@ -8,35 +8,101 @@
     <br>
     <hr>
     <h3> طلبيات التسليم</h3>
-  <table class="table">
+    <% for(var i=0; i<tasleem.length ; i++) { %>
+      <div class="jumbotron">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-5">
+             <p><strong>الإسم: </strong><%=tasleem[i].personName%></p> 
+             <p><strong>تاريخ التسليم: </strong><%= tasleem[i].dateToCompany.getDate() %>-<%= tasleem[i].dateToCompany.getMonth() %>-<%= tasleem[i].dateToCompany.getFullYear() %></p> 
+             <p><strong>الخصم: </strong><%=tasleem[i].discount%></p>
+             <p><strong>السعر الكلي بعد الخصم: </strong><%=tasleem[i].finalCost %></p>
+             <p><strong>ملاحظات: </strong><%=tasleem[i].notes%></p>
+            </div>
+            <div class="col-md-6">
+              <table class="table">
 
-  <thead>
-    <tr>
-      <th scope="col">النوع </th>
-      <th scope="col">المصدر </th>
-      <th scope="col">الكمية</th>
-      <th scope="col">السعر</th>
-      <th scope="col">تاريخ الوصول</th>
-      <th scope="col">ملاحظات أخرى</th>
-    </tr>
-  </thead>
-  <tbody>
-    
-      <% for(var j=0; j<ArchiveItems.length; j ++) {%>
-      <tr>
-          
-          <td><strong><%= ArchiveItems[j].type %></strong> </td>
-          <td> <%= ArchiveItems[j].source %></td>
-          <td> <%= ArchiveItems[j].amount %></td>
-          <td> <%= ArchiveItems[j].wholesalePrice %></td>
-          <td> <%= ArchiveItems[j].dateDelivered.getDate() %>-<%= ArchiveItems[j].dateDelivered.getMonth() %>-<%= ArchiveItems[j].dateDelivered.getFullYear() %></td>
-          <td> <%= ArchiveItems[j].notes %></td>
-                            
-        </tr>
-      <% } %>
-   
-  </tbody>
-</table> 
+                <thead>
+                  <tr>
+                    <th scope="col">النوع </th>
+                    <th scope="col">الكمية</th>
+                    <th scope="col">السعر</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                    <% for(var j=0; j<tasleem[i].items.length; j ++) {%>
+                    <tr>
+                        
+                        <td><strong><%= tasleem[i].items[j].type %></strong> </td>
+                        <td> <%= tasleem[i].items[j].amount %></td>
+                        <td> <%= tasleem[i].items[j].priceForEachOne * tasleem[i].items[j].amount %>شيكل </td>                   
+                      </tr>
+                    <% } %>
+                 
+                </tbody>
+              </table>
+            </div>
+            <div class="col-md-1">
+              <div class="checkbox">
+                <label><input type="checkbox" value="moveToSales"></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% } %>
+
+    <br>
+    <br>
+    <hr>
+    <h3> طلبيات التوصيل</h3>
+    <% for(var i=0; i<tawseel.length ; i++) { %>
+      <div class="jumbotron">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-5">
+             <p><strong>الإسم: </strong><%=tawseel[i].personName%></p> 
+             <p><strong>تاريخ التوصيل: </strong><%= tawseel[i].dateToCompany.getDate() %>-<%= tasleem[i].dateToCompany.getMonth() %>-<%= tasleem[i].dateToCompany.getFullYear() %></p> 
+             <p><strong>تكاليف التوصيل: </strong><%=tawseel[i].extraForDelivery%></p>
+             <p><strong>الخصم: </strong><%=tawseel[i].discount%></p>
+             <p><strong>السعر الكلي بعد الخصم: </strong><%=tawseel[i].finalCost %></p>
+             <p><strong>مكان السكن: </strong><%=tawseel[i].personLocation%></p>
+             <p><strong>ملاحظات: </strong><%=tawseel[i].notes%></p>
+            </div>
+            <div class="col-md-6">
+              <table class="table">
+
+                <thead>
+                  <tr>
+                    <th scope="col">النوع </th>
+                    <th scope="col">الكمية</th>
+                    <th scope="col">السعر</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                    <% for(var j=0; j<tawseel[i].items.length; j ++) {%>
+                    <tr>
+                        
+                        <td><strong><%= tawseel[i].items[j].type %></strong> </td>
+                        <td> <%= tawseel[i].items[j].amount %></td>
+                        <td> <%= tawseel[i].items[j].priceForEachOne * tawseel[i].items[j].amount %>شيكل </td>                   
+                      </tr>
+                    <% } %>
+                 
+                </tbody>
+              </table>
+            </div>
+            <div class="col-md-1">
+              <div class="checkbox">
+                <label><input type="checkbox" value="moveToSales"></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% } %>
 
 </div>
 <%- include("./partials/footer")%>
