@@ -60,7 +60,35 @@ app.get("/order/new", function(req, res){
 });
 
 app.post("/order/newOrder", function(req, res){
-  res.send(req.body);
+  var extra=0;
+  if(req.body.extraForDelivery =="no"){
+    extra=0;
+  } else if(req.body.extraForDelivery=="heb"){
+    extra = 10;
+  } else if(req.body.extraForDelivery=="wes"){
+    extra = 20;
+  } else if(req.body.extraForDelivery=="jer"){
+    extra = 30;
+  } else if(req.body.extraForDelivery=="isr"){
+    extra = 70;
+  }
+  var order = {
+    personName: req.body.personName,
+    //in case of Tasleem order the location and other delivery fields will be empty 
+    personLocation: req.body.personLocation, 
+    dateToCompany:req.body.dateToCompany, 
+    //dateToCustomer: to be decided when moved to sales,
+    // for now it is date to company.
+    dateToCustomer:req.body.dateToCompany, 
+    extraForDelivery:extra,
+    discount:req.body.discount, 
+    notes:req.body.notes,
+    recivedByCustomer:false,
+    finalCost:0,
+    items:[]
+  }  
+  
+  
 });
 
 
