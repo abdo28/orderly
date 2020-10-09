@@ -15,8 +15,10 @@ var orderSchema = new mongoose.Schema({
     finalCost:Number,
     discount:Number,
     recivedByCustomer:Boolean,
-    notes:String
+    notes:String, 
+    isTawseel:Boolean
 
 });
+
 
 module.exports = mongoose.model("order", orderSchema);

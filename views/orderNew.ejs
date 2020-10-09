@@ -68,9 +68,9 @@
             console.log("yes");
             inner+='<div class="form-group"><select class="form-control" name="orderItem['+k+'][type]" >';
                 for(var i=0; i<items.length; i++){ 
-                            inner+='<option value="'+items[i]._id+'">'+items[i].type+'</option>';
+                            inner+='<option value="'+items[i].type+'">'+items[i].type+'</option>';
                 }
-                   inner+='</select></div><div class="form-group"><input class="form-control" type="number"  name="orderItem['+k+'][amount]" placeholder="الكمية"></div>';
+                   inner+='</select></div><div class="form-group"><input class="form-control" type="number"  name="orderItem['+k+'][amount]" placeholder="الكمية" required></div>';
              } 
 
             document.getElementById("itemsTobe").innerHTML= inner;
