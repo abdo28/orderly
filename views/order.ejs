@@ -7,6 +7,8 @@
     <br>
     <br>
     <hr>
+    <div class="row">
+      <div class="col-md-6 col-sm-12">
     <h3> طلبيات التسليم</h3>
     <% for(var i=0; i<tasleem.length ; i++) { %>
       <div class="jumbotron">
@@ -53,9 +55,8 @@
       </div>
     <% } %>
 
-    <br>
-    <br>
-    <hr>
+    </div>
+    <div class="col-md-6 col-sm-12">
     <h3> طلبيات التوصيل</h3>
     <% for(var i=0; i<tawseel.length ; i++) { %>
       <div class="jumbotron">
@@ -96,6 +97,7 @@
             </div>
             <div class="col-md-1">
               <div class="checkbox">
+                
                 <label><input type="checkbox" value="moveToSales"></label>
               </div>
             </div>
@@ -103,6 +105,8 @@
         </div>
       </div>
     <% } %>
+    </div>
+    </div>
 
 </div>
 <%- include("./partials/footer")%>
