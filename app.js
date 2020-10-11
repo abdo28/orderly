@@ -36,12 +36,12 @@ app.get("/", function(req,res){
 
 
 //orders routs
-app.get("/order", function(req, res){
-  order.find({recivedByCustomer:false, isTawseel:true}).populate("items").exec(function(err, foundOrders){
+app.get("/order",async  function(req, res){
+  await order.find({recivedByCustomer:false, isTawseel:true}).populate("items").exec( async function(err, foundOrders){
     if(err){
       console.log(err);
     } else {
-      order.find({recivedByCustomer:false,  extraForDelivery:0}).populate("items").exec( function(err, foundTasleem){
+      await order.find({recivedByCustomer:false,  extraForDelivery:0}).populate("items").exec( function(err, foundTasleem){
         if(err){
           console.log(err);
         } else {
