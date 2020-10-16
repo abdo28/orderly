@@ -4,12 +4,12 @@
     <div class="row">
         <h1 style="text-align: center"></h1>
         <div style="width: 30%; margin: 25px auto;">
-            <form action="/order/newOrder" method="POST">
+            <form action="/wholesale/new" method="POST">
 
                 <div class="form-group">
-                    <input class="form-control" type="text" name="personName" placeholder="إسم الزبون" required>
+                    <input class="form-control" type="text" name="personName" placeholder="إسم المتجر" required>
                 </div>
-                <h6>تاريخ  التسليم </h6>
+                <h6>تاريخ الإستلام</h6>
                 <div class="form-group">
                     <input class="form-control" type="date"  name="dateToCompany"  required>
                 </div>
@@ -20,20 +20,10 @@
                     <input class="form-control" type="text" name="notes" placeholder="ملاحظات" >
                 </div>
                 <br>
-                <h4>في حال كان الطلب توصيل أضف المعلومات التالية</h4>
                 <div class="form-group">
-                    <input class="form-control" type="text"  name="personLocation" placeholder="مكان التوصيل">
+                    <input class="form-control" type="text"  name="personLocation" placeholder="مكان المتجر ">
                 </div>
-                <div class="form-group">
-                    <select class="form-control" name="extraForDelivery" >
-                        <option value="no">-</option>
-                        <option value="heb">مدينة الخليل</option>
-                        <option value="wes">الضفة الغربية</option>
-                        <option value="jer">القدس</option>
-                        <option value="isr">الداخل</option>
-                    </select>
-                </div>
-                <h6>رقم الزبون   </h6>
+                <h6>رقم صاحب المتجر </h6>
                 <div class="form-group">
                     <input class="form-control" type="text"  name="personNumber" value="-">
                 </div>
@@ -51,7 +41,7 @@
                     <button class="btn btn-lg btn-primary btn-block">إدخال </button>
                 </div>
             </form>
-            <a href="/order">رجوع للصفحة السابقة </a>
+            <a href="/wholesale">رجوع للصفحة السابقة </a>
         </div>
     </div>
 
@@ -74,7 +64,7 @@
                 for(var i=0; i<items.length; i++){ 
                             inner+='<option value="'+items[i].type+'">'+items[i].type+'</option>';
                 }
-                   inner+='</select></div><div class="form-group"><input class="form-control" type="number"  name="orderItem['+k+'][amount]" placeholder="الكمية" required></div>';
+                   inner+='</select></div><div class="form-group"><input class="form-control" type="number"  name="orderItem['+k+'][amount]" placeholder="الكمية" required></div><div class="form-group"><input class="form-control" type="number"  name="orderItem['+k+'][priceForEach]" placeholder="سعر البيع " required></div>';
              } 
 
             document.getElementById("itemsTobe").innerHTML= inner;

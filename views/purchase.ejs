@@ -60,20 +60,22 @@
       <th scope="col">النوع </th>
       <th scope="col">المصدر </th>
       <th scope="col">الكمية</th>
-      <th scope="col">السعر</th>
+      <th scope="col">جملة القطعة</th>
+      <th scope="col">المبلغ المدفوع</th>
       <th scope="col">تاريخ الوصول</th>
       <th scope="col">ملاحظات أخرى</th>
     </tr>
   </thead>
   <tbody>
     
-      <% for(var j=0; j<ArchiveItems.length; j ++) {%>
+      <% for(var j=ArchiveItems.length-1; j>=0; j --) {%>
       <tr>
           
           <td><strong><%= ArchiveItems[j].type %></strong> </td>
           <td> <%= ArchiveItems[j].source %></td>
           <td> <%= ArchiveItems[j].amount %></td>
           <td> <%= ArchiveItems[j].wholesalePrice %></td>
+          <td> <%=ArchiveItems[j].amount* ArchiveItems[j].wholesalePrice%></td>
           <td> <%= ArchiveItems[j].dateDelivered.getDate() %>-<%= ArchiveItems[j].dateDelivered.getMonth() %>-<%= ArchiveItems[j].dateDelivered.getFullYear() %></td>
           <td> <%= ArchiveItems[j].notes %></td>
                             

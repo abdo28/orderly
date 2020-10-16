@@ -1,6 +1,6 @@
 var mongoose = require("mongoose");
 
-var orderSchema = new mongoose.Schema({
+var wholesaleSchema = new mongoose.Schema({
     personName: String, 
     personNumber:String, 
     personLocation:String,
@@ -10,16 +10,16 @@ var orderSchema = new mongoose.Schema({
             ref: "item" 
          }
     ],
-    extraForDelivery:Number,
     dateToCompany:Date,
-    dateToCustomer:Date,
+    datefullyPay:Date,
     finalCost:Number,
+    WhatIsPayed:Number,
     discount:Number,
-    recivedByCustomer:Boolean,
-    notes:String, 
-    isTawseel:Boolean
+    FullyPay:Boolean,
+    notes:String
+
 
 });
 
 
-module.exports = mongoose.model("order", orderSchema);
+module.exports = mongoose.model("wholesale",  wholesaleSchema);
