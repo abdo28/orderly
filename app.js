@@ -392,7 +392,8 @@ app.post("/order/newOrder", async function(req, res){
                   if( isC==false){
                     isC=true;
                     await res.redirect("/order");
-                  }
+                  } 
+                  //cr.save();
                   }  
                   });
               }
