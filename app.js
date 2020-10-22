@@ -13,7 +13,7 @@ app = express();
 
 // local mongod
 
-mongoose.connect("mongodb://127.0.0.1:27017/orderly_v2", {useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
+mongoose.connect("mongodb://127.0.0.1:27017/orderly_v3", {useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
   if (err)
      console.error(err);
   else
@@ -132,7 +132,7 @@ app.post("/wholesale/new",  async function(req, res){
           number:itemsToBeOrdered[k].OriginalAmount-itemsToBeOrdered[k].itemAmount,
           retailPrice:itemsToBeOrdered[k].itemRetail
         };
-        await warehouse.findOneAndUpdate({type:itemsToBeOrdered[k].itemType},toBe, function(err, updatedware){
+        await warehouse.findOneAndUpdate({type:itemsToBeOrdered[k].itemType},{ $set:{ number:toBe.number}}, function(err, updatedware){
           if(err){
             console.log(err);
           } else{
