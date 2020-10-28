@@ -2,31 +2,71 @@ var express = require("express");
 var bodyParser  = require("body-parser");
 //var methodOverride = require("method-override");
 var mongoose = require("mongoose");
+var passport  = require("passport");
+const session = require('express-session');
+var LocalStrategy = require("passport-local");
+var catchAsync = require("./utils/catchAsync");
+
 
 var warehouse = require("./models/warehouse");
 var purchaseArchive = require("./models/purchaseArchive");
 var item = require("./models/item");
 var order = require("./models/order");
 var wholesale = require("./models/wholesale");
+var User = require("./models/user");
 var itemsToBeOrdered=[];
 app = express();
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true }));
+
+
+
 
 // local mongod
 
-mongoose.connect("mongodb://127.0.0.1:27017/orderly_v3", {useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
-  if (err)
-     console.error(err);
-  else
-     console.log("Connected to the mongodb"); 
+
+mongoose.connect('mongodb://127.0.0.1:27017/orderly_v3', {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false
 });
 
-mongoose.set('useNewUrlParser', true);
-mongoose.set('useUnifiedTopology', true);
-mongoose.set('useFindAndModify', false);
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", () => {
+    console.log("Database connected");
+});
+
+const sessionConfig = {
+  secret: 'thisshouldbeabettersecret!',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+      httpOnly: true,
+      expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+      maxAge: 1000 * 60 * 60 * 24 * 7
+  }
+}
+
+app.use(session(sessionConfig))
+
+
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(passport.initialize());
+app.use(passport.session());
 
+
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+app.use(function(req,res, next){
+	res.locals.currentUser = req.user;
+	next(); 
+});
 
 //app.use(methodOverride("_method"));
 
@@ -35,9 +75,47 @@ app.get("/", function(req,res){
     res.render("index");
 }); 
 
+// Auth routes
+
+app.get("/register",function(req,res){
+  res.render("register");
+});
+
+app.post("/register",catchAsync(async function(req, res, next){
+  try{
+    var {email, username, password} = req.body;
+    var user = new User({email, username});
+    var rUser = await User.register(user, password);
+    req.login(rUser, function(err){
+      if(err) return next(err);
+      console.log(rUser);
+      res.redirect("/purchase");
+    });
+   
+  } catch(e){
+    console.log(e);
+    res.redirect("/register");
+  }
+  
+}));
+
+app.get("/login", function(req, res){
+  res.render('login');
+});
+
+app.post("/login", passport.authenticate('local', {failureRedirect: '/login' }), function(req, res){
+  res.redirect("/purchase");
+});
+
+app.get("/logout", function(req, res){
+  req.logout();
+  res.redirect("/");
+});
+
+
 
 //sale routs
-app.get("/sale", async function(req, res){
+app.get("/sale", isLoggedIn,  async function(req, res){
   
   await order.find({recivedByCustomer:true, isTawseel:true}).populate("items").exec( async function(err, foundOrders){
     if(err){
@@ -62,7 +140,7 @@ app.get("/sale", async function(req, res){
   });
 });
 //wholesale routs
-app.get("/wholesale", async  function(req, res){
+app.get("/wholesale", isLoggedIn, async  function(req, res){
 
   await wholesale.find({FullyPay:false}).populate("items").exec( async function(err, foundWOrders){
     if(err){
@@ -74,7 +152,7 @@ app.get("/wholesale", async  function(req, res){
   });
 });
 
-app.get("/wholesale/new",function(req, res){
+app.get("/wholesale/new",isLoggedIn, function(req, res){
   warehouse.find({}, function(err, allWarehouseItems){
     if(err){
         console.log(err);
@@ -84,7 +162,7 @@ app.get("/wholesale/new",function(req, res){
  });
 });
 
-app.post("/wholesale/new",  async function(req, res){
+app.post("/wholesale/new", isLoggedIn,  async function(req, res){
 
   //var it=[];
   var fCost=0;
@@ -208,7 +286,7 @@ app.post("/wholesale/new",  async function(req, res){
 }); 
 
 
-app.post("/wholesale/:id", async function(req, res){
+app.post("/wholesale/:id",isLoggedIn,  async function(req, res){
   await wholesale.findById(req.params.id,/* { $set:{ items:ite}},*/ async function(err, returned){
     if(err){
       console.log(err);
@@ -244,7 +322,7 @@ app.post("/wholesale/:id", async function(req, res){
 
 
 //orders routs
-app.get("/order",async  function(req, res){
+app.get("/order",isLoggedIn, async  function(req, res){
   await order.find({recivedByCustomer:false, isTawseel:true}).populate("items").exec( async function(err, foundOrders){
     if(err){
       console.log(err);
@@ -260,7 +338,7 @@ app.get("/order",async  function(req, res){
   });
 });
 
-app.get("/order/new", function(req, res){
+app.get("/order/new", isLoggedIn, function(req, res){
   warehouse.find({}, function(err, allWarehouseItems){
     if(err){
         console.log(err);
@@ -270,7 +348,7 @@ app.get("/order/new", function(req, res){
  });
 });
 
-app.post("/order/newOrder", async function(req, res){
+app.post("/order/newOrder",isLoggedIn,  async function(req, res){
   //res.send(req.body)  
 
   var extra=0;
@@ -413,7 +491,7 @@ app.post("/order/newOrder", async function(req, res){
     }
 }); 
 
-app.post("/order/:id", async function(req, res){
+app.post("/order/:id",isLoggedIn,  async function(req, res){
  
   await order.findByIdAndUpdate(req.params.id,{ $set: {dateToCustomer:new Date(), recivedByCustomer:true }}, async function(err, ret){
       if(err){
@@ -430,7 +508,7 @@ app.post("/order/:id", async function(req, res){
 
 
 // purchases routes
-app.get("/purchase", function(req, res){
+app.get("/purchase", isLoggedIn, function(req, res){
   warehouse.find({}, function(err, warehouseItems){
     if(err){
       console.log(err);
@@ -446,7 +524,7 @@ app.get("/purchase", function(req, res){
   });
 });
 
-app.post("/purchase/newWarehouse", function(req, res){
+app.post("/purchase/newWarehouse", isLoggedIn, function(req, res){
   var ware= {type:req.body.type, number:0, retailPrice:req.body.retailPrice };
   warehouse.find({type:ware.type}, function(err, ret){
     if(err){
@@ -470,7 +548,7 @@ app.post("/purchase/newWarehouse", function(req, res){
     
 });
 
-app.get("/purchase/newArchive", function(req, res){
+app.get("/purchase/newArchive", isLoggedIn, function(req, res){
   warehouse.find({}, function(err, allWarehouseItems){
         if(err){
             console.log(err);
@@ -480,7 +558,7 @@ app.get("/purchase/newArchive", function(req, res){
      });
 });
 
-app.post("/Archive", function(req, res){
+app.post("/Archive", isLoggedIn, function(req, res){
   // get data from form and add to campgrounds array
   
   var purchaseArc = {
@@ -492,7 +570,7 @@ app.post("/Archive", function(req, res){
     notes:req.body.notes
   };
 
-  purchaseArchive.create(purchaseArc, function(err, foundpur){
+  purchaseArchive.create(purchaseArc, isLoggedIn, function(err, foundpur){
     if(err){
       console.log(err);
     } else {
@@ -511,6 +589,17 @@ app.post("/Archive", function(req, res){
     }
     });
   });
+
+  function isLoggedIn(req, res, next){
+    if(!req.isAuthenticated()){
+      console.log("you must be loged in"+res.locals.currentUser );
+      return res.redirect("/login");
+    }
+    next();
+    
+  }
+
+
 
 
 

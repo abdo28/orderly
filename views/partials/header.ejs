@@ -36,6 +36,14 @@
                     <li><a href="/wholesale">جملة</a></li>
                     <li><a href="/sale">مبيعات</a></li>
                 </ul>
+                <ul class="nav navbar-nav navbar-left">
+                    <% if(!currentUser) { %>
+                    <li><a class="nav-link" href="/login">دخول</a></li>
+                    <li><a class="nav-link" href="/register">تسجيل</a></li>
+                    <% } else { %>
+                    <li><a class="nav-link" href="/logout">خروج</a></li>
+                    <% } %>
+                </ul>
             </div>
         
         </div>

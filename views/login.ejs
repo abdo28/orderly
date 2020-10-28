@@ -1,0 +1,30 @@
+<%- include("./partials/header")%>
+
+<div class="container">
+    <h1>دخول </h1>
+
+    <div class="row">
+        <h1 style="text-align: center"></h1>
+        <div style="width: 30%; margin: 25px auto;">
+            <form action="/login" method="POST" class="validated-form" nonvalidate>
+
+                <div class="form-group">
+                    <input class="form-control" type="text" name="username" placeholder="إسم المستخدم" required>
+                </div>
+                
+                <div class="form-group">
+                    <input class="form-control" type="password" name="password" placeholder="كلمة السر" required >
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-lg btn-success btn-block">الدخول </button>
+                </div>
+                
+                
+               
+            </form>
+        </div>
+    </div>
+</div>
+
+<%- include("./partials/footer")%>
+
