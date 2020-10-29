@@ -8,7 +8,12 @@ var purchaseArchiveSchema = new mongoose.Schema({
    /* source could be actual person, or a url link to an online delivered products */
    source:String, 
    dateDelivered:Date,
+   userOwner:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+   },
    notes:String
+   
    
 });
 

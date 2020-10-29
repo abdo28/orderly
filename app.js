@@ -23,8 +23,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 // local mongod
-
-
 mongoose.connect('mongodb://127.0.0.1:27017/orderly_v3', {
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -70,13 +68,16 @@ app.use(function(req,res, next){
 
 //app.use(methodOverride("_method"));
 
+//////////
 // Landing
+//////////
 app.get("/", function(req,res){
     res.render("index");
 }); 
 
+//////////////
 // Auth routes
-
+//////////////
 app.get("/register",function(req,res){
   res.render("register");
 });
@@ -91,12 +92,10 @@ app.post("/register",catchAsync(async function(req, res, next){
       console.log(rUser);
       res.redirect("/purchase");
     });
-   
   } catch(e){
     console.log(e);
     res.redirect("/register");
-  }
-  
+  }  
 }));
 
 app.get("/login", function(req, res){
@@ -112,11 +111,10 @@ app.get("/logout", function(req, res){
   res.redirect("/");
 });
 
-
-
+////////////
 //sale routs
+////////////
 app.get("/sale", isLoggedIn,  async function(req, res){
-  
   await order.find({recivedByCustomer:true, isTawseel:true}).populate("items").exec( async function(err, foundOrders){
     if(err){
       console.log(err);
@@ -130,24 +128,23 @@ app.get("/sale", isLoggedIn,  async function(req, res){
               console.log(err);
             } else {
               await res.render("sale", {jomleh: foundWOrders, tawseel:foundOrders, tasleem:foundTasleem});
-              
             }
           });
-
         }
       });
     }
   });
 });
-//wholesale routs
-app.get("/wholesale", isLoggedIn, async  function(req, res){
 
+/////////////////
+//wholesale routs
+////////////////
+app.get("/wholesale", isLoggedIn, async  function(req, res){
   await wholesale.find({FullyPay:false}).populate("items").exec( async function(err, foundWOrders){
     if(err){
       console.log(err);
     } else {
       await res.render("wholesale", {jomleh: foundWOrders});
-      
     }
   });
 });
@@ -163,10 +160,7 @@ app.get("/wholesale/new",isLoggedIn, function(req, res){
 });
 
 app.post("/wholesale/new", isLoggedIn,  async function(req, res){
-
-  //var it=[];
   var fCost=0;
-
   itemsToBeOrdered=[];
   for(var i=0; i<req.body.orderItem.length;i++){
       itemsToBeOrdered.push({
@@ -189,9 +183,7 @@ app.post("/wholesale/new", isLoggedIn,  async function(req, res){
       } else {
        // console.log(itemsToBeOrderedj);
         console.log(foundItem);
-        
         itemsToBeOrderedjOriginalAmount = foundItem.number;
-
         if(itemsToBeOrderedjitemAmount>foundItem.number){
           canAddOrder=false;
           console.log("cant add element");
@@ -218,8 +210,6 @@ app.post("/wholesale/new", isLoggedIn,  async function(req, res){
           }
         });
       }  
-      
-
       let ddate = req.body.dateToCompany;
       var who = {
         personName: req.body.personName,
@@ -236,7 +226,6 @@ app.post("/wholesale/new", isLoggedIn,  async function(req, res){
         WhatIsPayed:0
       };
 
-      // newwww
       var ide ;
       await wholesale.create(who, async function(err, created){
         if(err){
@@ -252,8 +241,9 @@ app.post("/wholesale/new", isLoggedIn,  async function(req, res){
         await item.create({type:itemsToBeOrdered[m].itemType, priceForEachOne:itemsToBeOrdered[m].itemRetail, amount:itemsToBeOrdered[m].itemAmount}, async function(err, createdItem){
           if(err){
             console.log(err);
+          } else if(ite==[]){
+            await  res.redirect("/wholesale/new");
           }else{
-            
             try {
               createdItem.save();
               ite.push(createdItem);
@@ -269,22 +259,17 @@ app.post("/wholesale/new", isLoggedIn,  async function(req, res){
                   }  
                   });
               }
-              
-              
-          } catch(err) {
+            } catch(err) {
               console.log("There was an error")
               console.log(err)
+            }
           }
-           
-          }
-        } );
-
+        });
       }
     } else {
     await  res.redirect("/wholesale/new");
     }
 }); 
-
 
 app.post("/wholesale/:id",isLoggedIn,  async function(req, res){
   await wholesale.findById(req.params.id,/* { $set:{ items:ite}},*/ async function(err, returned){
@@ -315,13 +300,13 @@ app.post("/wholesale/:id",isLoggedIn,  async function(req, res){
       } );
      }
     await res.redirect("/wholesale");
-
     }
   });
 });
 
-
+///////////////
 //orders routs
+//////////////
 app.get("/order",isLoggedIn, async  function(req, res){
   await order.find({recivedByCustomer:false, isTawseel:true}).populate("items").exec( async function(err, foundOrders){
     if(err){
@@ -349,8 +334,6 @@ app.get("/order/new", isLoggedIn, function(req, res){
 });
 
 app.post("/order/newOrder",isLoggedIn,  async function(req, res){
-  //res.send(req.body)  
-
   var extra=0;
   var istaw=true;
   if(req.body.extraForDelivery =="no"){
@@ -365,9 +348,7 @@ app.post("/order/newOrder",isLoggedIn,  async function(req, res){
   } else if(req.body.extraForDelivery=="isr"){
     extra = 70;
   }
-  //var it=[];
   var fCost=0;
-
   itemsToBeOrdered=[];
   for(var i=0; i<req.body.orderItem.length;i++){
       itemsToBeOrdered.push({
@@ -404,7 +385,6 @@ app.post("/order/newOrder",isLoggedIn,  async function(req, res){
     itemsToBeOrdered[j].OriginalAmount = itemsToBeOrderedjOriginalAmount
     console.log(itemsToBeOrdered[j]);
   }
-
     if(canAddOrder){
       for(var k=0; k<itemsToBeOrdered.length;k++){
         var toBe= {
@@ -420,8 +400,7 @@ app.post("/order/newOrder",isLoggedIn,  async function(req, res){
           }
         });
       }  
-      
-
+  
       let ddate = req.body.dateToCompany;
       var ord = {
         personName: req.body.personName,
@@ -441,7 +420,6 @@ app.post("/order/newOrder",isLoggedIn,  async function(req, res){
         isTawseel:istaw
       };
 
-      // newwww
       var ide ;
       await order.create(ord, async function(err, created){
         if(err){
@@ -457,8 +435,9 @@ app.post("/order/newOrder",isLoggedIn,  async function(req, res){
         await item.create({type:itemsToBeOrdered[m].itemType, priceForEachOne:itemsToBeOrdered[m].itemRetail, amount:itemsToBeOrdered[m].itemAmount}, async function(err, createdItem){
           if(err){
             console.log(err);
+          } else if(ite==[]){
+            await  res.redirect("/order/new");
           }else{
-            
             try {
               createdItem.save();
               ite.push(createdItem);
@@ -475,16 +454,12 @@ app.post("/order/newOrder",isLoggedIn,  async function(req, res){
                   }  
                   });
               }
-              
-              
           } catch(err) {
               console.log("There was an error")
               console.log(err)
           }
-           
           }
         } );
-
       }
     } else {
     await  res.redirect("/order/new");
@@ -492,7 +467,6 @@ app.post("/order/newOrder",isLoggedIn,  async function(req, res){
 }); 
 
 app.post("/order/:id",isLoggedIn,  async function(req, res){
- 
   await order.findByIdAndUpdate(req.params.id,{ $set: {dateToCustomer:new Date(), recivedByCustomer:true }}, async function(err, ret){
       if(err){
         console.log(err);
@@ -500,14 +474,11 @@ app.post("/order/:id",isLoggedIn,  async function(req, res){
       await res.redirect("/order");
      }
  } );
-
-    
- 
 });
 
-
-
+///////////////////
 // purchases routes
+///////////////////
 app.get("/purchase", isLoggedIn, function(req, res){
   warehouse.find({}, function(err, warehouseItems){
     if(err){
@@ -545,7 +516,6 @@ app.post("/purchase/newWarehouse", isLoggedIn, function(req, res){
       }
     }
   });
-    
 });
 
 app.get("/purchase/newArchive", isLoggedIn, function(req, res){
@@ -560,7 +530,6 @@ app.get("/purchase/newArchive", isLoggedIn, function(req, res){
 
 app.post("/Archive", isLoggedIn, function(req, res){
   // get data from form and add to campgrounds array
-  
   var purchaseArc = {
     type: req.body.type, 
     amount:req.body.amount, 
@@ -569,7 +538,6 @@ app.post("/Archive", isLoggedIn, function(req, res){
     dateDelivered:req.body.dateDelivered,
     notes:req.body.notes
   };
-
   purchaseArchive.create(purchaseArc, isLoggedIn, function(err, foundpur){
     if(err){
       console.log(err);
@@ -596,14 +564,10 @@ app.post("/Archive", isLoggedIn, function(req, res){
       return res.redirect("/login");
     }
     next();
-    
   }
 
 
-
-
-
-
+  
 app.listen(3000, '127.0.0.1', () => {
   console.log(`Server running at http://${'127.0.0.1'}:${3000}/`);
 });

@@ -11,6 +11,10 @@ var orderSchema = new mongoose.Schema({
          }
     ],
     extraForDelivery:Number,
+    userOwner:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+     },
     dateToCompany:Date,
     dateToCustomer:Date,
     finalCost:Number,

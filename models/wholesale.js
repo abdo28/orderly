@@ -11,6 +11,10 @@ var wholesaleSchema = new mongoose.Schema({
          }
     ],
     dateToCompany:Date,
+    userOwner:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+     },
     datefullyPay:Date,
     finalCost:Number,
     WhatIsPayed:Number,
