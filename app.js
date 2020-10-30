@@ -184,7 +184,7 @@ app.post("/wholesale/new", isLoggedIn,  async function(req, res){
        // console.log(itemsToBeOrderedj);
         console.log(foundItem);
         itemsToBeOrderedjOriginalAmount = foundItem.number;
-        if(itemsToBeOrderedjitemAmount>foundItem.number){
+        if((itemsToBeOrderedjitemAmount>foundItem.number)||(itemsToBeOrderedjOriginalAmount-itemsToBeOrderedjitemAmount<0)){
           canAddOrder=false;
           console.log("cant add element");
         }
@@ -396,7 +396,7 @@ app.post("/order/newOrder",isLoggedIn,  async function(req, res){
         itemsToBeOrderedjitemRetail=foundItem.retailPrice;
         itemsToBeOrderedjOriginalAmount = foundItem.number;
 
-        if(itemsToBeOrderedjitemAmount>foundItem.number){
+        if((itemsToBeOrderedjitemAmount>foundItem.number)||(itemsToBeOrderedjOriginalAmount-itemsToBeOrderedjitemAmount<0)){
           canAddOrder=false;
           console.log("cant add element");
         }
@@ -460,7 +460,6 @@ app.post("/order/newOrder",isLoggedIn,  async function(req, res){
               } else {
                 //crid=cr._id;
                 console.log(ite);
-                console.log("+++++++++++++++++++++_______________________+++++++++++++++++=") ;
                 try {
                   await cr.save();
                   for(var k=0; k<itemsToBeOrdered.length;k++){
