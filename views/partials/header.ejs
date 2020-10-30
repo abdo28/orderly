@@ -30,12 +30,14 @@
             
             
             <div class="collapse navbar-collapse" id="example-1">
+                <% if(currentUser) {%>
                 <ul class="nav navbar-nav">
                     <li><a href="/purchase">مشتريات </a></li>
                     <li><a href="/order">طلبيات</a></li>
                     <li><a href="/wholesale">جملة</a></li>
                     <li><a href="/sale">مبيعات</a></li>
                 </ul>
+            <% } %>
                 <ul class="nav navbar-nav navbar-left">
                     <% if(!currentUser) { %>
                     <li><a class="nav-link" href="/login">دخول</a></li>

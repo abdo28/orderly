@@ -196,20 +196,6 @@ app.post("/wholesale/new", isLoggedIn,  async function(req, res){
   }
 
     if(canAddOrder){
-      for(var k=0; k<itemsToBeOrdered.length;k++){
-        var toBe= {
-          type:itemsToBeOrdered[k].itemType,
-          number:itemsToBeOrdered[k].OriginalAmount-itemsToBeOrdered[k].itemAmount,
-          retailPrice:itemsToBeOrdered[k].itemRetail
-        };
-        await warehouse.findOneAndUpdate({type:itemsToBeOrdered[k].itemType},{ $set:{ number:toBe.number}}, function(err, updatedware){
-          if(err){
-            console.log(err);
-          } else{
-            console.log(updatedware);
-          }
-        });
-      }  
       let ddate = req.body.dateToCompany;
       var who = {
         personName: req.body.personName,
@@ -237,35 +223,71 @@ app.post("/wholesale/new", isLoggedIn,  async function(req, res){
       });
       var isC=false;
       var ite=[];
+      var il=itemsToBeOrdered.length;
+     // var crid;
       for(var m=0; m<itemsToBeOrdered.length; m++){
         await item.create({type:itemsToBeOrdered[m].itemType, priceForEachOne:itemsToBeOrdered[m].itemRetail, amount:itemsToBeOrdered[m].itemAmount}, async function(err, createdItem){
           if(err){
             console.log(err);
-          } else if(ite==[]){
-            await  res.redirect("/wholesale/new");
           }else{
             try {
-              createdItem.save();
-              ite.push(createdItem);
-              if(m == itemsToBeOrdered.length){
-               await wholesale.findByIdAndUpdate(ide,  { $set:{ items:ite}}, async function(err, cr){
-                  if(err){
-                    console.log(err);
-                  } else {
-                  if( isC==false){
-                    isC=true;
-                    await res.redirect("/wholesale");
-                  }
-                  }  
-                  });
-              }
+              await createdItem.save();
+              await ite.push(createdItem);
+              
             } catch(err) {
               console.log("There was an error")
               console.log(err)
             }
+            if(ite.length==il){
+              console.log(ite); 
+              await wholesale.findByIdAndUpdate(ide,  { $set:{items:ite}}, async function(err, cr){
+                if(err){
+                  console.log(err);
+                } else {
+                  //crid=cr._id;
+                  console.log(ite);
+                  console.log("+++++++++++++++++++++_______________________+++++++++++++++++=") ;
+                  try {
+                    await cr.save();
+                    for(var k=0; k<itemsToBeOrdered.length;k++){
+                      var toBe= {
+                        type:itemsToBeOrdered[k].itemType,
+                        number:itemsToBeOrdered[k].OriginalAmount-itemsToBeOrdered[k].itemAmount,
+                        retailPrice:itemsToBeOrdered[k].itemRetail
+                      };
+                      await warehouse.findOneAndUpdate({type:itemsToBeOrdered[k].itemType},{ $set:{ number:toBe.number}}, function(err, updatedware){
+                        if(err){
+                          console.log(err);
+                        } else{
+                          console.log(updatedware);
+                        }
+                      });
+                    }  
+                    
+                  } catch(err) {
+                    console.log("There was an error")
+                    console.log(err);
+                    await wholesale.findByIdAndDelete(ide, async function(err){
+                      if(err){
+                        console.log(err);
+                      } else{
+                        console.log("delted");
+                      }
+                    } );
+                    res.redirect("/wholesale/new");
+                  }
+                  
+                if( isC==false){
+                  isC=true;
+                  await res.redirect("/wholesale");
+                }
+                }  
+                });
+            }
           }
         });
       }
+      
     } else {
     await  res.redirect("/wholesale/new");
     }
@@ -365,9 +387,9 @@ app.post("/order/newOrder",isLoggedIn,  async function(req, res){
     var itemsToBeOrderedjitemRetail=0;
     var itemsToBeOrderedjOriginalAmount=0; 
     var itemsToBeOrderedjitemAmount= itemsToBeOrdered[j].itemAmount;
-    await  warehouse.findOne({type:itemsToBeOrdered[j].itemType}, function(err, foundItem){
+    await  warehouse.findOne({type:itemsToBeOrdered[j].itemType},async function(err, foundItem){
       if(err){
-        console.log(err);
+       await console.log(err);
       } else {
        // console.log(itemsToBeOrderedj);
         console.log(foundItem);
@@ -386,21 +408,6 @@ app.post("/order/newOrder",isLoggedIn,  async function(req, res){
     console.log(itemsToBeOrdered[j]);
   }
     if(canAddOrder){
-      for(var k=0; k<itemsToBeOrdered.length;k++){
-        var toBe= {
-          type:itemsToBeOrdered[k].itemType,
-          number:itemsToBeOrdered[k].OriginalAmount-itemsToBeOrdered[k].itemAmount,
-          retailPrice:itemsToBeOrdered[k].itemRetail
-        };
-        await warehouse.findOneAndUpdate({type:itemsToBeOrdered[k].itemType},toBe, function(err, updatedware){
-          if(err){
-            console.log(err);
-          } else{
-            console.log(updatedware);
-          }
-        });
-      }  
-  
       let ddate = req.body.dateToCompany;
       var ord = {
         personName: req.body.personName,
@@ -431,36 +438,69 @@ app.post("/order/newOrder",isLoggedIn,  async function(req, res){
       });
       var isC=false;
       var ite=[];
+      var il=itemsToBeOrdered.length;
+      //var crid;
       for(var m=0; m<itemsToBeOrdered.length; m++){
         await item.create({type:itemsToBeOrdered[m].itemType, priceForEachOne:itemsToBeOrdered[m].itemRetail, amount:itemsToBeOrdered[m].itemAmount}, async function(err, createdItem){
           if(err){
             console.log(err);
-          } else if(ite==[]){
-            await  res.redirect("/order/new");
-          }else{
+          } else{
             try {
-              createdItem.save();
-              ite.push(createdItem);
-              if(m == itemsToBeOrdered.length){
-               await order.findByIdAndUpdate(ide,  { $set:{ items:ite}}, async function(err, cr){
-                  if(err){
-                    console.log(err);
-                  } else {
-                  if( isC==false){
-                    isC=true;
-                    await res.redirect("/order");
-                  } 
-                  //cr.save();
-                  }  
-                  });
-              }
+              await createdItem.save();
+              await ite.push(createdItem);
           } catch(err) {
               console.log("There was an error")
               console.log(err)
           }
+          if(ite.length==il){
+            console.log(ite);
+            await order.findByIdAndUpdate(ide,  { $set:{ items:ite}}, async function(err, cr){
+              if(err){
+                console.log(err);
+              } else {
+                //crid=cr._id;
+                console.log(ite);
+                console.log("+++++++++++++++++++++_______________________+++++++++++++++++=") ;
+                try {
+                  await cr.save();
+                  for(var k=0; k<itemsToBeOrdered.length;k++){
+                    var toBe= {
+                      type:itemsToBeOrdered[k].itemType,
+                      number:itemsToBeOrdered[k].OriginalAmount-itemsToBeOrdered[k].itemAmount,
+                      retailPrice:itemsToBeOrdered[k].itemRetail
+                    };
+                    await warehouse.findOneAndUpdate({type:itemsToBeOrdered[k].itemType},toBe, async function(err, updatedware){
+                      if(err){
+                        await console.log(err);
+                      } else{
+                       await console.log(updatedware);
+                      }
+                    });
+                  }  
+                  
+                } catch(err) {
+                  console.log("There was an error")
+                  console.log(err);
+                  await order.findByIdAndDelete(ide, async function(err){
+                    if(err){
+                      console.log(err);
+                    } else{
+                      console.log("delted");
+                    }
+                  } )
+                  res.redirect("/order/new");
+                }
+                if( isC==false){
+                isC=true;
+                await res.redirect("/order");
+              } 
+              //cr.save();
+              }  
+              });
+          }
           }
         } );
-      }
+      }    
     } else {
     await  res.redirect("/order/new");
     }
@@ -538,7 +578,7 @@ app.post("/Archive", isLoggedIn, function(req, res){
     dateDelivered:req.body.dateDelivered,
     notes:req.body.notes
   };
-  purchaseArchive.create(purchaseArc, isLoggedIn, function(err, foundpur){
+  purchaseArchive.create(purchaseArc, function(err, foundpur){
     if(err){
       console.log(err);
     } else {
