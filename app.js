@@ -115,15 +115,15 @@ app.get("/logout", function(req, res){
 //sale routs
 ////////////
 app.get("/sale", isLoggedIn,  async function(req, res){
-  await order.find({recivedByCustomer:true, isTawseel:true}).populate("items").exec( async function(err, foundOrders){
+  await order.find({recivedByCustomer:true, isTawseel:true, userOwner: res.locals.currentUser }).populate("items").exec( async function(err, foundOrders){
     if(err){
       console.log(err);
     } else {
-      await order.find({recivedByCustomer:true,  extraForDelivery:0}).populate("items").exec( async function(err, foundTasleem){
+      await order.find({recivedByCustomer:true,  extraForDelivery:0, userOwner: res.locals.currentUser}).populate("items").exec( async function(err, foundTasleem){
         if(err){
           console.log(err);
         } else {
-          await wholesale.find({FullyPay:true}).populate("items").exec( async function(err, foundWOrders){
+          await wholesale.find({FullyPay:true, userOwner: res.locals.currentUser}).populate("items").exec( async function(err, foundWOrders){
             if(err){
               console.log(err);
             } else {
@@ -140,7 +140,7 @@ app.get("/sale", isLoggedIn,  async function(req, res){
 //wholesale routs
 ////////////////
 app.get("/wholesale", isLoggedIn, async  function(req, res){
-  await wholesale.find({FullyPay:false}).populate("items").exec( async function(err, foundWOrders){
+  await wholesale.find({FullyPay:false,userOwner: res.locals.currentUser}).populate("items").exec( async function(err, foundWOrders){
     if(err){
       console.log(err);
     } else {
@@ -150,7 +150,7 @@ app.get("/wholesale", isLoggedIn, async  function(req, res){
 });
 
 app.get("/wholesale/new",isLoggedIn, function(req, res){
-  warehouse.find({}, function(err, allWarehouseItems){
+  warehouse.find({userOwner: res.locals.currentUser}, function(err, allWarehouseItems){
     if(err){
         console.log(err);
     } else {
@@ -177,7 +177,7 @@ app.post("/wholesale/new", isLoggedIn,  async function(req, res){
     var itemsToBeOrderedjitemRetail=itemsToBeOrdered[j].itemRetail;
     var itemsToBeOrderedjOriginalAmount=0; 
     var itemsToBeOrderedjitemAmount= itemsToBeOrdered[j].itemAmount;
-    await  warehouse.findOne({type:itemsToBeOrdered[j].itemType}, function(err, foundItem){
+    await  warehouse.findOne({type:itemsToBeOrdered[j].itemType,userOwner: res.locals.currentUser}, function(err, foundItem){
       if(err){
         console.log(err);
       } else {
@@ -206,6 +206,7 @@ app.post("/wholesale/new", isLoggedIn,  async function(req, res){
         datefullyPay:ddate, 
         discount:req.body.discount, 
         notes:req.body.notes,
+        userOwner: res.locals.currentUser,
         FullyPay:false,
         finalCost:((fCost)-req.body.discount),
         items:[], 
@@ -253,9 +254,10 @@ app.post("/wholesale/new", isLoggedIn,  async function(req, res){
                       var toBe= {
                         type:itemsToBeOrdered[k].itemType,
                         number:itemsToBeOrdered[k].OriginalAmount-itemsToBeOrdered[k].itemAmount,
-                        retailPrice:itemsToBeOrdered[k].itemRetail
+                        retailPrice:itemsToBeOrdered[k].itemRetail,
+                        userOwner: res.locals.currentUser
                       };
-                      await warehouse.findOneAndUpdate({type:itemsToBeOrdered[k].itemType},{ $set:{ number:toBe.number}}, function(err, updatedware){
+                      await warehouse.findOneAndUpdate({type:itemsToBeOrdered[k].itemType, userOwner: res.locals.currentUser},{ $set:{ number:toBe.number}}, function(err, updatedware){
                         if(err){
                           console.log(err);
                         } else{
@@ -330,11 +332,11 @@ app.post("/wholesale/:id",isLoggedIn,  async function(req, res){
 //orders routs
 //////////////
 app.get("/order",isLoggedIn, async  function(req, res){
-  await order.find({recivedByCustomer:false, isTawseel:true}).populate("items").exec( async function(err, foundOrders){
+  await order.find({recivedByCustomer:false, isTawseel:true,userOwner: res.locals.currentUser}).populate("items").exec( async function(err, foundOrders){
     if(err){
       console.log(err);
     } else {
-      await order.find({recivedByCustomer:false,  extraForDelivery:0}).populate("items").exec( async function(err, foundTasleem){
+      await order.find({recivedByCustomer:false,  extraForDelivery:0, userOwner: res.locals.currentUser}).populate("items").exec( async function(err, foundTasleem){
         if(err){
           console.log(err);
         } else {
@@ -346,7 +348,7 @@ app.get("/order",isLoggedIn, async  function(req, res){
 });
 
 app.get("/order/new", isLoggedIn, function(req, res){
-  warehouse.find({}, function(err, allWarehouseItems){
+  warehouse.find({userOwner: res.locals.currentUser}, function(err, allWarehouseItems){
     if(err){
         console.log(err);
     } else {
@@ -387,7 +389,7 @@ app.post("/order/newOrder",isLoggedIn,  async function(req, res){
     var itemsToBeOrderedjitemRetail=0;
     var itemsToBeOrderedjOriginalAmount=0; 
     var itemsToBeOrderedjitemAmount= itemsToBeOrdered[j].itemAmount;
-    await  warehouse.findOne({type:itemsToBeOrdered[j].itemType},async function(err, foundItem){
+    await  warehouse.findOne({type:itemsToBeOrdered[j].itemType,userOwner: res.locals.currentUser},async function(err, foundItem){
       if(err){
        await console.log(err);
       } else {
@@ -421,6 +423,7 @@ app.post("/order/newOrder",isLoggedIn,  async function(req, res){
         discount:req.body.discount, 
         personNumber:req.body.personNumber,
         notes:req.body.notes,
+        userOwner: res.locals.currentUser,
         recivedByCustomer:false,
         finalCost:((fCost +extra)-req.body.discount),
         items:[], 
@@ -466,9 +469,10 @@ app.post("/order/newOrder",isLoggedIn,  async function(req, res){
                     var toBe= {
                       type:itemsToBeOrdered[k].itemType,
                       number:itemsToBeOrdered[k].OriginalAmount-itemsToBeOrdered[k].itemAmount,
-                      retailPrice:itemsToBeOrdered[k].itemRetail
+                      retailPrice:itemsToBeOrdered[k].itemRetail,
+                      userOwner: res.locals.currentUser
                     };
-                    await warehouse.findOneAndUpdate({type:itemsToBeOrdered[k].itemType},toBe, async function(err, updatedware){
+                    await warehouse.findOneAndUpdate({type:itemsToBeOrdered[k].itemType,userOwner: res.locals.currentUser},toBe, async function(err, updatedware){
                       if(err){
                         await console.log(err);
                       } else{
@@ -519,11 +523,11 @@ app.post("/order/:id",isLoggedIn,  async function(req, res){
 // purchases routes
 ///////////////////
 app.get("/purchase", isLoggedIn, function(req, res){
-  warehouse.find({}, function(err, warehouseItems){
+  warehouse.find({userOwner: res.locals.currentUser}, function(err, warehouseItems){
     if(err){
       console.log(err);
     } else {
-      purchaseArchive.find({}, function(err, Archive){
+      purchaseArchive.find({userOwner: res.locals.currentUser}, function(err, Archive){
         if(err){
           console.log(err);
         } else {
@@ -535,8 +539,8 @@ app.get("/purchase", isLoggedIn, function(req, res){
 });
 
 app.post("/purchase/newWarehouse", isLoggedIn, function(req, res){
-  var ware= {type:req.body.type, number:0, retailPrice:req.body.retailPrice };
-  warehouse.find({type:ware.type}, function(err, ret){
+  var ware= {type:req.body.type, number:0, retailPrice:req.body.retailPrice,userOwner: res.locals.currentUser };
+  warehouse.find({type:ware.type,userOwner: res.locals.currentUser}, function(err, ret){
     if(err){
       console.log(err);
     } else {
@@ -558,7 +562,7 @@ app.post("/purchase/newWarehouse", isLoggedIn, function(req, res){
 });
 
 app.get("/purchase/newArchive", isLoggedIn, function(req, res){
-  warehouse.find({}, function(err, allWarehouseItems){
+  warehouse.find({userOwner: res.locals.currentUser}, function(err, allWarehouseItems){
         if(err){
             console.log(err);
         } else {
@@ -575,7 +579,8 @@ app.post("/Archive", isLoggedIn, function(req, res){
     wholesalePrice:req.body.wholesalePrice, 
     source:req.body.source, 
     dateDelivered:req.body.dateDelivered,
-    notes:req.body.notes
+    notes:req.body.notes,
+    userOwner: res.locals.currentUser
   };
   purchaseArchive.create(purchaseArc, function(err, foundpur){
     if(err){
@@ -583,11 +588,11 @@ app.post("/Archive", isLoggedIn, function(req, res){
     } else {
       console.log(foundpur);
 
-      warehouse.findOne({ type:foundpur.type }, function(err, ware){
+      warehouse.findOne({ type:foundpur.type,userOwner: res.locals.currentUser }, function(err, ware){
           if(err){
             console.log(err);
           }else {
-            warehouse.findOneAndUpdate({ type:foundpur.type }, { type:foundpur.type, number:(ware.number+foundpur.amount), retailPrice:ware.retailPrice }, function(err, result){
+            warehouse.findOneAndUpdate({ type:foundpur.type,userOwner: res.locals.currentUser }, { type:foundpur.type, number:(ware.number+foundpur.amount), retailPrice:ware.retailPrice,userOwner: res.locals.currentUser }, function(err, result){
               console.log(ware);
               res.redirect('/purchase');
             });
