@@ -602,6 +602,48 @@ app.post("/Archive", isLoggedIn, function(req, res){
     });
   });
 
+////////////
+//math routs
+//////////// 
+app.get("/math",isLoggedIn, async function(req, res){
+  await order.find({recivedByCustomer:true, isTawseel:true, userOwner: res.locals.currentUser }).populate("items").exec( async function(err, foundOrders){
+    if(err){
+      console.log(err);
+    } else {
+      await order.find({recivedByCustomer:true,  extraForDelivery:0, userOwner: res.locals.currentUser}).populate("items").exec( async function(err, foundTasleem){
+        if(err){
+          console.log(err);
+        } else {
+          await wholesale.find({FullyPay:true, userOwner: res.locals.currentUser}).populate("items").exec( async function(err, foundWOrders){
+            if(err){
+              console.log(err);
+            } else {
+               //await res.render("sale", {jomleh: foundWOrders, tawseel:foundOrders, tasleem:foundTasleem});
+               let netFinalCost = 0;
+              for(let i=0; i<foundOrders.length; i++){
+                netFinalCost+=foundOrders[i].finalCost;
+              
+              }
+              for(let i=0; i<foundWOrders.length; i++){
+                netFinalCost+=foundWOrders[i].finalCost;
+              
+              }
+              for(let i=0; i<foundTasleem.length; i++){
+                netFinalCost+=foundTasleem[i].finalCost;
+
+              }
+              
+              console.log(netFinalCost);
+            }
+          });
+        }
+      });
+    }
+  });
+});
+
+
+
   function isLoggedIn(req, res, next){
     if(!req.isAuthenticated()){
       console.log("you must be loged in"+res.locals.currentUser );
