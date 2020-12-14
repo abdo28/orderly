@@ -4,6 +4,7 @@ var warehouseSchema = new mongoose.Schema({
    type: String, 
    number:Number, 
    retailPrice:Number, 
+   originalPrice:Number,
    userOwner:{
       type: mongoose.Schema.Types.ObjectId,
       ref: "User"
