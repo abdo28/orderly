@@ -1,4 +1,27 @@
 <%- include("./partials/header")%>
+<div class="collapse navbar-collapse" id="example-1">
+  <% if(currentUser) {%>
+  <ul class="nav navbar-nav">
+      <li><a href="/purchase">مشتريات </a></li>
+      <li><a  href="/order">طلبيات</a></li>
+      <li><a href="/wholesale">جملة</a></li>
+      <li><a  style="color: #fff;background-color:#337ab7 ; " href="/sale">مبيعات</a></li>
+      <li><a href="/math">محاسبة</a></li>
+
+  </ul>
+<% } %>
+  <ul class="nav navbar-nav navbar-left">
+      <% if(!currentUser) { %>
+      <li><a class="nav-link" href="/login">دخول</a></li>
+      <li><a class="nav-link" href="/register">تسجيل</a></li>
+      <% } else { %>
+      <li><a class="nav-link" href="/logout">خروج</a></li>
+      <% } %>
+  </ul>
+</div>
+
+</div>
+</nav>
 <div class="container">
     <h2> المبيعات</h2>
     <br>
