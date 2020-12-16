@@ -23,8 +23,35 @@
 </nav>
 
 <div class="container">
+    <h3>مجمل الأرباح:  <%=rev%> شيكل</h3>
+    <hr>
+    <h4>الأرباح حسب النوع</h4>
     
+    <h6> إختر المنتج من القائمة المنسدلة لترى مجمل الأرباح في صندوق الوصف</h6>
+   <!--<form action="/netrev/" method="POST" >-->
+    <div class="form-group">
+      <select id="it" class="form-control" onchange="myFunction()" name="type" style="width:30%">
+          <% for(var i=0; i<items.length; i++){ %>
+              <option value="<%=items[i].type%>"><%= items[i].type %> </option>
+          <% } %>
+
+      </select>
+    </div>
+    <!--</form>-->
+    <h4>مجمل الأرباح للنوع المحدد:  <%=itemrev%> شيكل</h4>
 
   </div>
+  <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>    
 
+  <script>
+    function myFunction(){
+      var type = document.getElementById("it").value;
+      const Url = '/math/netrev';
+      //const data = type;
+      $.post(Url, type,function( type,status){
+        console.log(` ${type} and status is${status}`);
+      });
+
+    }
+  </script>
 <%- include("./partials/footer")%>
