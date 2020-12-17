@@ -640,9 +640,6 @@ app.get("/math",isLoggedIn, async function(req, res){
                     if(allWarehouseItems.length>0){
                         type = allWarehouseItems[0].type;
                     }
-                  console.log(type);
-            
-
                   
                   let netRev = 0;
                   let itemrev=0;
@@ -659,8 +656,6 @@ app.get("/math",isLoggedIn, async function(req, res){
                   }
                   for(var i=0; i<foundWOrders.length; i++){
                     for(var j=0;j<foundWOrders[i].items.length;j++){
-                      console.log(foundWOrders[i].items[j].type);
-                      console.log(type);
                       if(foundWOrders[i].items[j].type==type)
                       itemrev+= (foundWOrders[i].items[j].priceForEachOne- foundWOrders[i].items[j].originalPriceForEachOne)*foundWOrders[i].items[j].amount;
                       netRev+= (foundWOrders[i].items[j].priceForEachOne- foundWOrders[i].items[j].originalPriceForEachOne)*foundWOrders[i].items[j].amount;
@@ -669,7 +664,6 @@ app.get("/math",isLoggedIn, async function(req, res){
                     netRev-=foundWOrders[i].discount;         
                   }
                   for(var i=0; i<foundTasleem.length; i++){
-                    console.log(foundTasleem[i].items)
                     for(var j=0;j<foundTasleem[i].items.length;j++){
                       if(foundTasleem[i].items[j].type==type)
                       itemrev+= (foundTasleem[i].items[j].priceForEachOne- foundTasleem[i].items[j].originalPriceForEachOne)*foundTasleem[i].items[j].amount;
@@ -680,7 +674,7 @@ app.get("/math",isLoggedIn, async function(req, res){
 
                   }
                   console.log(itemrev);
-                await res.render("math", {rev:netRev, items:allWarehouseItems,itemre:itemrev});
+                await res.render("math", {rev:netRev, items:allWarehouseItems,itemre:itemrev, foundOrders:foundOrders, foundTasleem:foundTasleem, foundWOrders:foundWOrders});
             }
             });
             }
@@ -690,85 +684,6 @@ app.get("/math",isLoggedIn, async function(req, res){
     }
   });
 });  
-app.post("/math/:id", isLoggedIn, async function(req, res){
-  await order.find({recivedByCustomer:true, isTawseel:true, userOwner: res.locals.currentUser }).populate("items").exec( async function(err, foundOrders){
-    if(err){
-      console.log(err);
-    } else {
-      await order.find({recivedByCustomer:true,  extraForDelivery:0, userOwner: res.locals.currentUser}).populate("items").exec( async function(err, foundTasleem){
-        if(err){
-          console.log(err);
-        } else {
-          await wholesale.find({FullyPay:true, userOwner: res.locals.currentUser}).populate("items").exec( async function(err, foundWOrders){
-            if(err){
-              console.log(err);
-            } else {
-               await warehouse.find({userOwner: res.locals.currentUser}, async function(err, allWarehouseItems){
-                if(err){
-                    console.log(err);
-                } else {
-                  console.log("reached");
-                  console.log(req.params);
-                  var type;
-                  for(var i=0; i<allWarehouseItems.length;i++){
-                    if(allWarehouseItems[i]._id==req.params.id){
-                        type = allWarehouseItems[i].type;
-                        break;
-                    }
-                  }
-                  console.log(type);
-            
-
-                  
-                  let netRev = 0;
-                  let itemrev=0;
-                  for(var i=0; i<foundOrders.length; i++){
-                    
-                    for(var j=0;j<foundOrders[i].items.length;j++){
-                      if(foundOrders[i].items[j].type==type)
-                        itemrev+= (foundOrders[i].items[j].priceForEachOne- foundOrders[i].items[j].originalPriceForEachOne)*foundOrders[i].items[j].amount;
-                        netRev+= (foundOrders[i].items[j].priceForEachOne- foundOrders[i].items[j].originalPriceForEachOne)*foundOrders[i].items[j].amount;
-
-                    }
-                    netRev-=foundOrders[i].discount;
-                  
-                  }
-                  for(var i=0; i<foundWOrders.length; i++){
-                    for(var j=0;j<foundWOrders[i].items.length;j++){
-                      console.log(foundWOrders[i].items[j].type);
-                      console.log(type);
-                      if(foundWOrders[i].items[j].type==type)
-                      itemrev+= (foundWOrders[i].items[j].priceForEachOne- foundWOrders[i].items[j].originalPriceForEachOne)*foundWOrders[i].items[j].amount;
-                      netRev+= (foundWOrders[i].items[j].priceForEachOne- foundWOrders[i].items[j].originalPriceForEachOne)*foundWOrders[i].items[j].amount;
-
-                    }     
-                    netRev-=foundWOrders[i].discount;         
-                  }
-                  for(var i=0; i<foundTasleem.length; i++){
-                    console.log(foundTasleem[i].items)
-                    for(var j=0;j<foundTasleem[i].items.length;j++){
-                      if(foundTasleem[i].items[j].type==type)
-                      itemrev+= (foundTasleem[i].items[j].priceForEachOne- foundTasleem[i].items[j].originalPriceForEachOne)*foundTasleem[i].items[j].amount;
-                      netRev+= (foundTasleem[i].items[j].priceForEachOne- foundTasleem[i].items[j].originalPriceForEachOne)*foundTasleem[i].items[j].amount;
-
-                    }
-                    netRev-=foundTasleem[i].discount;
-
-                  }
-                  console.log(itemrev);
-
-                await res.render("math", {rev:netRev, items:allWarehouseItems,itemre:itemrev});
-            }
-            });
-            }
-          });
-        }
-      });
-    }
-  });
-});
-
-
 
   function isLoggedIn(req, res, next){
     if(!req.isAuthenticated()){

@@ -1,4 +1,4 @@
-<%- include("./partials/header")%>
+<%- include("../views/partials/header")%>
 <div class="collapse navbar-collapse" id="example-1">
   <% if(currentUser) {%>
   <ul class="nav navbar-nav">
@@ -28,9 +28,6 @@
     <h4>الأرباح حسب النوع</h4>
     <script>
       var items = '<%- JSON.stringify(items) %>'  
-      var foundOrders = '<%- JSON.stringify(foundOrders) %>' 
-      var foundTasleem= '<%- JSON.stringify(foundTasleem) %>' 
-      var foundWOrders= '<%- JSON.stringify(foundWOrders) %>' 
    </script>
     <h6> إختر المنتج من القائمة المنسدلة لترى مجمل الأرباح في صندوق الوصف</h6>
    <!--<form action="/netrev/" method="POST" >-->
@@ -43,40 +40,28 @@
       </select>
     </div>
     <!--</form>-->
-    <h4>مجمل الأرباح للنوع المحدد:  <span id="itemRev"></span> شيكل</h4>
+    <h4>مجمل الأرباح للنوع المحدد:  <%=itemre%> شيكل</h4>
 
   </div>
 
   <script>
     items = JSON.parse(items);
-    foundOrders = JSON.parse(foundOrders);
-    foundTasleem = JSON.parse(foundTasleem);
-    foundWOrders = JSON.parse(foundWOrders);
     function myFunction(){
       var id;
+      var xhr = new XMLHttpRequest();
       var type = document.getElementById("it").value;
-      let itemrev=0;
-      for(var i=0; i<foundOrders.length; i++){              
-        for(var j=0;j<foundOrders[i].items.length;j++){
-          if(foundOrders[i].items[j].type==type)
-            itemrev+= (foundOrders[i].items[j].priceForEachOne- foundOrders[i].items[j].originalPriceForEachOne)*foundOrders[i].items[j].amount;
+      for(let i=0; i<items.length; i++){
+        if(items[i].type == type){
+          id = items[i]._id;
+          break;
         }
-                  
       }
-      for(var i=0; i<foundWOrders.length; i++){
-        for(var j=0;j<foundWOrders[i].items.length;j++){
-          if(foundWOrders[i].items[j].type==type)
-            itemrev+= (foundWOrders[i].items[j].priceForEachOne- foundWOrders[i].items[j].originalPriceForEachOne)*foundWOrders[i].items[j].amount;
-        }     
-      }
-      for(var i=0; i<foundTasleem.length; i++){
-        for(var j=0;j<foundTasleem[i].items.length;j++){
-          if(foundTasleem[i].items[j].type==type)
-            itemrev+= (foundTasleem[i].items[j].priceForEachOne- foundTasleem[i].items[j].originalPriceForEachOne)*foundTasleem[i].items[j].amount;
-        }
-      }      
-      var itemRev = document.getElementById("itemRev");
-      itemRev.innerHTML = itemrev;
+      const Url = '/math/'+id;
+      console.log(Url);
+      xhr.open("POST", Url, true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send();
+
     }
   </script>
-<%- include("./partials/footer")%>
+<%- include("../views/partials/footer")%>
