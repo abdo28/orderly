@@ -26,7 +26,9 @@
     <h3>مجمل الأرباح:  <%=rev%> شيكل</h3>
     <hr>
     <h4>الأرباح حسب النوع</h4>
-    
+    <script>
+      var items = '<%- JSON.stringify(items) %>'  
+   </script>
     <h6> إختر المنتج من القائمة المنسدلة لترى مجمل الأرباح في صندوق الوصف</h6>
    <!--<form action="/netrev/" method="POST" >-->
     <div class="form-group">
@@ -38,19 +40,27 @@
       </select>
     </div>
     <!--</form>-->
-    <h4>مجمل الأرباح للنوع المحدد:  <%=itemrev%> شيكل</h4>
+    <h4>مجمل الأرباح للنوع المحدد:  <%=itemre%> شيكل</h4>
 
   </div>
-  <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>    
 
   <script>
+    items = JSON.parse(items);
     function myFunction(){
+      var id;
+      var xhr = new XMLHttpRequest();
       var type = document.getElementById("it").value;
-      const Url = '/math/netrev';
-      //const data = type;
-      $.post(Url, type,function( type,status){
-        console.log(` ${type} and status is${status}`);
-      });
+      for(let i=0; i<items.length; i++){
+        if(items[i].type == type){
+          id = items[i]._id;
+          break;
+        }
+      }
+      const Url = '/math/'+id;
+      console.log(Url);
+      xhr.open("POST", Url, true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send();
 
     }
   </script>
