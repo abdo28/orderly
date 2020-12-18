@@ -25,7 +25,8 @@
 <div class="container">
     <h3>مجمل الأرباح:  <%=rev%> شيكل</h3>
     <hr>
-    <h4>الأرباح حسب النوع</h4>
+    <br>
+    <h3>الأرباح حسب النوع</h3>
     <script>
       var items = '<%- JSON.stringify(items) %>'  
       var foundOrders = '<%- JSON.stringify(foundOrders) %>' 
@@ -33,17 +34,17 @@
       var foundWOrders= '<%- JSON.stringify(foundWOrders) %>' 
    </script>
     <h6> إختر المنتج من القائمة المنسدلة لترى مجمل الأرباح في صندوق الوصف</h6>
-   <!--<form action="/netrev/" method="POST" >-->
     <div class="form-group">
-      <select id="it" class="form-control" onchange="myFunction()" name="type" style="width:30%">
+      <select id="it" class="form-control" onchange="myFunction()" name="type" style="width:31%">
           <% for(var i=0; i<items.length; i++){ %>
               <option value="<%=items[i].type%>"><%= items[i].type %> </option>
           <% } %>
-
       </select>
     </div>
-    <!--</form>-->
     <h4>مجمل الأرباح للنوع المحدد:  <span id="itemRev"></span> شيكل</h4>
+
+    <hr>
+    <br>
 
   </div>
 
@@ -52,6 +53,7 @@
     foundOrders = JSON.parse(foundOrders);
     foundTasleem = JSON.parse(foundTasleem);
     foundWOrders = JSON.parse(foundWOrders);
+    myFunction();
     function myFunction(){
       var id;
       var type = document.getElementById("it").value;
