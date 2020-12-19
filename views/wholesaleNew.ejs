@@ -38,19 +38,19 @@
                 <div class="form-group">
                     <input class="form-control" type="date"  name="dateToCompany"  required>
                 </div>
-                <h6>الخصم إن وُجد</h6>
-                <div class="form-group">
-                    <input class="form-control" type="number" step="any" name="discount" value="0" >
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type="text" name="notes" placeholder="ملاحظات" >
-                </div>
                 <div class="form-group">
                     <input class="form-control" type="text"  name="personLocation" placeholder="مكان المتجر ">
                 </div>
                 <h6>رقم صاحب المتجر </h6>
                 <div class="form-group">
                     <input class="form-control" type="text"  name="personNumber" value="-">
+                </div>
+                <h6>الخصم إن وُجد</h6>
+                <div class="form-group">
+                    <input class="form-control" type="number" step="any" name="discount" value="0" >
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" name="notes" placeholder="ملاحظات" >
                 </div>
                 <br>
                 <h4>الطلبية </h4>
@@ -67,7 +67,7 @@
                             <input class="form-control" type="number"  name="orderItem[0][amount]" placeholder="الكمية" required>
                         </div>
                         <div class="form-group">
-                            <input class="form-control" type="number"  name="orderItem[0][priceForEach]" placeholder="سعر البيع " required>
+                            <input class="form-control" type="number" step="any" name="orderItem[0][priceForEach]" placeholder="سعر البيع " required>
                         </div>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
         for(var i=0; i<items.length; i++){ 
             inner+='<option value="'+items[i].type+'">'+items[i].type+'</option>';
         }
-        inner+='</select></div><div class="form-group"><input class="form-control" type="number"  name="orderItem['+k+'][amount]" placeholder="الكمية" required></div><div class="form-group"><input class="form-control" type="number"  name="orderItem['+k+'][priceForEach]" placeholder="سعر البيع " required></div>';
+        inner+='</select></div><div class="form-group"><input class="form-control" type="number"  name="orderItem['+k+'][amount]" placeholder="الكمية" required></div><div class="form-group"><input class="form-control" type="number" step="any" name="orderItem['+k+'][priceForEach]" placeholder="سعر البيع " required></div>';
         var e = document.createElement('div');
         e.innerHTML = inner;
         document.getElementById("order_items").appendChild(e);    }
