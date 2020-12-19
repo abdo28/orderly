@@ -95,7 +95,7 @@ app.use("/purchase", purchaseRoutes);
 app.use("/Archive", archiveRoutes);
 app.use("/math", mathRoutes);
  
-const port = proccess.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 app.listen(port,  () => {
   console.log(`Server running at:${port}/`);
 });
