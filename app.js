@@ -1,3 +1,6 @@
+ if (proccess.env.NODE_ENV != "production"){
+  require('dotenv').config()
+ }
 var express = require("express");
 var bodyParser  = require("body-parser");
 //var methodOverride = require("method-override");
@@ -6,7 +9,7 @@ var passport  = require("passport");
 const session = require('express-session');
 var LocalStrategy = require("passport-local");
 var catchAsync = require("./utils/catchAsync");
-
+const MongoStore = require('connect-mongo')(session);
 
 var warehouse = require("./models/warehouse");
 var purchaseArchive = require("./models/purchaseArchive");
@@ -29,7 +32,9 @@ var authRoutes = require("./routes/auth");
 
 
 // local mongod
-mongoose.connect('mongodb://127.0.0.1:27017/orderly_v3', {
+//'mongodb://127.0.0.1:27017/orderly_v3'
+const DB_URL = process.env.DB_URL || 'mongodb://127.0.0.1:27017/orderly_v3';
+mongoose.connect( DB_URL, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
@@ -41,9 +46,20 @@ db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
     console.log("Database connected");
 });
+const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
+const store = new MongoStore({
+  url: DB_URL  ,
+  secret: secret,
+  touchAfter: 24*60*60
+});
+store.on("error", function(e){
+  console.log("SESSION STORE ERROR", e);
+})
 
 const sessionConfig = {
-  secret: 'thisshouldbeabettersecret!',
+  store,
+  name: 'session',
+  secret,
   resave: false,
   saveUninitialized: true,
   cookie: {
