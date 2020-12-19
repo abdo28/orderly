@@ -23,9 +23,11 @@
   </div>
   </nav>
 <div class="container">
-
+    <script>
+        var items = '<%- JSON.stringify(items) %>'  
+    </script>
     <div class="row">
-        <h1 style="text-align: center">إضافة طلبية</h1>
+        <h1 style="text-align: center; font-weight: bold;">إضافة طلبية</h1>
         <div style="width: 30%; margin: 25px auto;">
             <form action="/order/newOrder" method="POST">
 
@@ -36,17 +38,19 @@
                 <div class="form-group">
                     <input class="form-control" type="date"  name="dateToCompany"  required>
                 </div>
+                <h6>الخصم إن وُجد</h6>
                 <div class="form-group">
-                    <input class="form-control" type="number" step="any" name="discount" value="0"placeholder="الخصم ان وجد" >
+                    <input class="form-control" type="number" step="any" name="discount" value="0" >
                 </div>
                 <div class="form-group">
                     <input class="form-control" type="text" name="notes" placeholder="ملاحظات" >
                 </div>
                 <br>
-                <h4>في حال كان الطلب توصيل أضف المعلومات التالية</h4>
+                <h5 style="font-weight: bold;">في حال كان الطلب توصيل أضف المعلومات التالية</h5>
                 <div class="form-group">
                     <input class="form-control" type="text"  name="personLocation" placeholder="مكان التوصيل">
                 </div>
+                <h6>نوع التوصيل</h6>
                 <div class="form-group">
                     <select class="form-control" name="extraForDelivery" >
                         <option value="no">-</option>
@@ -62,15 +66,25 @@
                 </div>
                 <br>
                 <h4>الطلبية </h4>
-                <label>عدد العناصر</label>
-                <%var count=0%>                
-
-                <input type="number" name="numberToCount" id="numberToCount">
-                <p  class="btn btn-xs btn-success"onclick="myFunction()" type="submit" id="button1">تأكيد</p>
-                <div id="itemsTobe">
-
+                <div id ="order_items">
+                    <div>
+                        <div class="form-group">
+                            <select class="form-control" name="orderItem[0][type]" >
+                                <% for(var i=0; i<items.length; i++){ %>
+                                    <option value="<%=items[i].type%>"><%= items[i].type %> </option>
+                                <% } %>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" type="number"  name="orderItem[0][amount]" placeholder="الكمية" required>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
+                <div onclick="myFunction()" style="border: 1px solid #ccc; border-radius: 4px; text-align:center; width:10%; padding: 3px 6px;  justify-content: center; margin: 0 auto;  background-color: #e5e5e5;">
+                    +                        
+                </div>
+
+                <div class="form-group" style = "margin-top: 12px;">
                     <button class="btn btn-lg btn-primary btn-block">إدخال </button>
                 </div>
             </form>
@@ -80,28 +94,19 @@
 
 </div>
 <script>
-    function htmlDecode(input){
-        var e = document.createElement('div');
-        e.innerHTML = input;
-        return e.childNodes.length ===0 ?"": e.childNodes[0].nodeValue;
-    }
-    var items = JSON.parse(htmlDecode("<%= JSON.stringify(items) %>"));
+    items = JSON.parse(items);
+    var k=0;
     function myFunction(){
-        let numberToCount = document.getElementById("numberToCount");
-        count=numberToCount.value;
+        k++;
         let inner="";
-        console.log("yes");
-        for(var k=0; k<count; k++){
-            console.log("yes");
-            inner+='<div class="form-group"><select class="form-control" name="orderItem['+k+'][type]" >';
-                for(var i=0; i<items.length; i++){ 
-                            inner+='<option value="'+items[i].type+'">'+items[i].type+'</option>';
-                }
-                   inner+='</select></div><div class="form-group"><input class="form-control" type="number"  name="orderItem['+k+'][amount]" placeholder="الكمية" required></div>';
-             } 
-
-            document.getElementById("itemsTobe").innerHTML= inner;
-            console.log("yes");
+        inner+='<div class="form-group"><select class="form-control" name="orderItem['+k+'][type]" >';
+        for(var i=0; i<items.length; i++){ 
+            inner+='<option value="'+items[i].type+'">'+items[i].type+'</option>';
+        }
+        inner+='</select></div><div class="form-group"><input class="form-control" type="number"  name="orderItem['+k+'][amount]" placeholder="الكمية" required></div>';
+        var e = document.createElement('div');
+        e.innerHTML = inner;
+        document.getElementById("order_items").appendChild(e);
     }
 </script>
 

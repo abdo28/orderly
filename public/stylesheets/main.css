@@ -18,6 +18,7 @@ body .container{
     /*height: 150px;*/
     clear:both;
     padding-top:10px;
+    padding-bottom: 10px;
   }
 ul.nav a:hover { 
     color: #fff;

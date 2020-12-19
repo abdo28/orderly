@@ -26,7 +26,8 @@
 <div class="container">
 
     <div class="row">
-        <h1 style="text-align: center">إضافة مشتريات إلى أرشيف المشتريات</h1>
+        <h1 style="text-align: center; font-weight: bold;">إضافة مشتريات إلى أرشيف المشتريات</h1>
+        <br>
         <div style="width: 30%; margin: 25px auto;">
             <form action="/Archive" method="POST">
                 <script>
@@ -54,8 +55,9 @@
                 <div class="form-group">
                     <input id="in"class="form-control" type="number" step="any" name="wholesalePrice"   required>
                 </div>
+                <h6>تاريخ وصول المشتريات</h6>
                 <div class="form-group">
-                    <input class="form-control" type="date" name="dateDelivered" placeholder="تاريخ الوصول" required>
+                    <input class="form-control" type="date" name="dateDelivered" required>
                 </div>
                 <div class="form-group">
                     <input class="form-control" type="text" name="notes" placeholder="ملاحظات أخرى">
@@ -71,18 +73,9 @@
 </div>
 
 <script>
-        items = JSON.parse(items);
-        var it = document.getElementById("it").value;
-        console.log(items);
-        for(var i=0; i<items.length; i++){ 
-            console.log(it);
-            console.log(items[i].type);
-            if(it==items[i].type){
-                document.getElementById("in").value = items[i].originalPrice;
-            }
-        }
-    function myFunction(){
-       
+    items = JSON.parse(items);
+    myFunction();
+    function myFunction(){ 
         var it = document.getElementById("it").value;
         console.log(items);
         for(var i=0; i<items.length; i++){ 
