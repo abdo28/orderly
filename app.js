@@ -96,7 +96,8 @@ app.use("/order", orderRoutes);
 app.use("/purchase", purchaseRoutes);
 app.use("/Archive", archiveRoutes);
 app.use("/math", mathRoutes);
-  
-app.listen(3000, '127.0.0.1', () => {
-  console.log(`Server running at http://${'127.0.0.1'}:${3000}/`);
+ 
+const port = proccess.env.PORT || 3000;
+app.listen(port,  () => {
+  console.log(`Server running at:${port}/`);
 });
