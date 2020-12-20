@@ -26,10 +26,12 @@
     <h2 style="font-weight: bold;">المشتريات / المستودع </h2>
     <br>
 
-    <a href="/purchase/newArchive" class="btn btn-primary btn-default" style="width:30%">إضافة مشتريات</a>
+    
+    <div class = "row">
+    <div class="col-md-4 col-sm-5 col-xm-7">
+    <a href="/purchase/newArchive" class="btn btn-primary btn-default" style="width:100%" >إضافة مشتريات</a>
     <br>
     <br>
-    <div style="width:30%">
       <h4 style="font-weight: bold;">إضافة نوع منتج جديد</h4>
       <form action="/purchase/newWarehouse" method="POST">
         <div class="form-group">
@@ -46,11 +48,14 @@
         </div>
     </form>
     </div>
+    </div>
     <br>
     <hr>
     
     <h3 style="font-weight: bold;">المستودع </h3>
-  <table class="table" style="width: 40%">
+    <div class="row"> 
+    <div class="col-md-4 col-sm-5 col-xm-7">
+  <table class="table" >
 
   <thead>
     <tr>
@@ -75,11 +80,14 @@
    
   </tbody>
 </table> 
+</div>
+</div>
     
    
   <br>
   <hr>
   <h3 style="font-weight: bold;">أرشيف المشتريات </h3>
+  <div class = "table-responsive">
   <table class="table">
 
   <thead>
@@ -111,5 +119,6 @@
    
   </tbody>
 </table> 
+</div>
   </div>
   <%- include("./partials/footer")%>

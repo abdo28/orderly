@@ -21,32 +21,35 @@
 
 </div>
 </nav>
-
-<div class="container">
-    <h3 style="font-weight: bold;">مجمل الأرباح:  <%=rev%> شيكل</h3>
-    <hr>
-    <br>
-    <h3 style="font-weight: bold;">الأرباح حسب النوع</h3>
-    <script>
+<script>
       var items = '<%- JSON.stringify(items) %>'  
       var foundOrders = '<%- JSON.stringify(foundOrders) %>' 
       var foundTasleem= '<%- JSON.stringify(foundTasleem) %>' 
       var foundWOrders= '<%- JSON.stringify(foundWOrders) %>' 
-   </script>
-    <h6> إختر المنتج من القائمة المنسدلة لترى مجمل الأرباح في صندوق الوصف</h6>
-    <div class="form-group">
-      <select id="it" class="form-control" onchange="myFunction()" name="type" style="width:31%">
-          <% for(var i=0; i<items.length; i++){ %>
-              <option value="<%=items[i].type%>"><%= items[i].type %> </option>
-          <% } %>
-      </select>
-    </div>
-    <h4>مجمل الأرباح للنوع المحدد:  <span id="itemRev"></span> شيكل</h4>
+</script>
+<div class="container">
 
+    <h3 style="font-weight: bold;">مجمل الأرباح:  <%=rev%> شيكل</h3>
+    <hr>
+    <br>
+    <h3 style="font-weight: bold;">الأرباح حسب النوع</h3>
+    <div class="row">
+        <h6> إختر المنتج من القائمة المنسدلة لترى مجمل الأرباح في صندوق الوصف</h6>
+        <div class="col-md-4 col-sm-5 col-xm-7">
+            <div class="form-group" >
+              <select id="it" class="form-control" onchange="myFunction()" name="type">
+                  <% for(var i=0; i<items.length; i++){ %>
+                      <option value="<%=items[i].type%>"><%= items[i].type %> </option>
+                  <% } %>
+              </select>
+            </div>
+            <h4>مجمل الأرباح للنوع المحدد:  <span id="itemRev"></span> شيكل</h4>
+        </div>
+    </div>
     <hr>
     <br>
 
-  </div>
+</div>
 
   <script>
     items = JSON.parse(items);
