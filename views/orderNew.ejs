@@ -30,7 +30,7 @@
         <h1 style="text-align: center; font-weight: bold;">إضافة طلبية</h1>
         <br>
         <div class="col-md-4 col-xm-8" style="float: none; margin-right: auto; margin-left: auto;">
-            <form action="/order/newOrder" method="POST">
+            <form action="/order/newOrder" method="POST" onsubmit="myButton.disabled = true; return true;">
 
                 <div class="form-group">
                     <input class="form-control" type="text" name="personName" placeholder="إسم الزبون" required>
@@ -86,7 +86,7 @@
                 </div>
 
                 <div class="form-group" style = "margin-top: 12px;">
-                    <button class="btn btn-lg btn-primary btn-block">إدخال </button>
+                    <button name = "myButton" class="btn btn-lg btn-primary btn-block">إدخال </button>
                 </div>
             </form>
             <a href="/order">رجوع للصفحة السابقة </a>
